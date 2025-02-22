@@ -1,10 +1,10 @@
 require 'pg'
 
 class Database
-  NAME = Sinatra::Base.test? ? 'hanzistack-test' : 'hanzistack'
+  NAME = ENV['RACK_ENV'] == 'test' ? 'hanzistack-test' : 'hanzistack'
 
   class << self
-    def connect
+    def test_connect
       PG.connect(dbname: NAME) { |db| db }
     rescue PG::ConnectionBad
       create_database

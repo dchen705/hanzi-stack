@@ -1,3 +1,6 @@
+require 'bundler/setup'
+require 'sinatra'
+
 require_relative 'lib/database'
 require_relative 'lib/characters'
 
@@ -10,7 +13,7 @@ end
 configure(:development, :test) do
   require 'sinatra/reloader'
   also_reload 'lib/*.rb'
-  Database.connect
+  Database.test_connect
 end
 
 before do
