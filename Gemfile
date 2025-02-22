@@ -6,6 +6,7 @@ gem 'sinatra', '4.1.1'
 gem 'sinatra-contrib', '4.1.1'
 gem 'rackup', '2.2.1'
 gem 'erubi', '1.13.1'
+gem 'pg', '1.5.9'
 
 group :development do
   gem 'pry', '0.14.2'

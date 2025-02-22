@@ -1,0 +1,8 @@
+<% @characters_list.each do |character| %>
+  <div>
+    <h4><%= character["hanzi"] %></h4>
+    <p><%= character["pinyin"] %></p>
+    <p><%= character["meaning"] %><p>
+    <br>
+  </div>
+<% end %>

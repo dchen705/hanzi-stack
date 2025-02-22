@@ -7,3 +7,5 @@
 3. Ensure correct ruby version is installed as specified in Gemfile.
 4. `bundle install` to install dependencies
 5. `bundle exec rackup [-p port_number]` to start application
+
+Requires a Postgres database called hsk-flashcards
