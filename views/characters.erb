@@ -1,8 +1,15 @@
 <% @characters_list.each do |character| %>
   <div>
-    <h4><%= character["hanzi"] %></h4>
-    <p><%= character["pinyin"] %></p>
-    <p><%= character["meaning"] %><p>
-    <br>
+    <span><%= character["hanzi"] %></span>
+    <span><%= character["pinyin"] %></span>
+    <span><%= character["meaning"] %></span>
+  <% if saved?(character["id"]) %>
+      <button class="list-add" data-character-id="<%= character['id'] %>" disabled>✅ Saved</button>
+      <button class="list-remove" data-character-id="<%= character['id'] %>">❌ Remove from Stack</button>
+    <% else %>
+      <button class="list-add" data-character-id="<%= character['id'] %>">➕ Add to Stack</button>
+      <button class="list-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Stack</button>
+    <% end %>
   </div>
 <% end %>
+<script src="/javascripts/characters_view.js"></script>

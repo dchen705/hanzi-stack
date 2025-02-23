@@ -3,7 +3,8 @@ class Characters
 
   def list
     query('SELECT * FROM characters;').map do |tuple|
-      { 'hanzi' => tuple['hanzi'],
+      { 'id' => tuple['id'],
+        'hanzi' => tuple['hanzi'],
         'pinyin' => tuple['pinyin'],
         'meaning' => tuple['meaning'] }
     end

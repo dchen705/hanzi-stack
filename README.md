@@ -8,4 +8,4 @@
 4. `bundle install` to install dependencies
 5. `bundle exec rackup [-p port_number]` to start application
 
-Requires a Postgres database called hsk-flashcards
+![routes-views-map](docs/images/route_view_mapping.png)
