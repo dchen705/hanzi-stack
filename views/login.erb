@@ -1,1 +1,13 @@
 <p>Login Form</p>
+<form action="/login" method="post">
+  <div>
+    <label for="username">Username:</label>
+    <input name="username" id="username" value="<%= params[:username]%>">
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password">
+  </div>
+  <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a href="/register">Register</a></p>

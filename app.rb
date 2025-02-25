@@ -3,6 +3,7 @@ require 'sinatra'
 
 require_relative 'lib/helpers'
 require_relative 'lib/database'
+require_relative 'lib/users'
 require_relative 'lib/characters'
 
 configure do
@@ -18,6 +19,7 @@ configure(:development, :test) do
 end
 
 before do
+  @users = Users.new(logger)
   @characters = Characters.new(logger)
   session[:stack] ||= {}
   @stack = session[:stack]
@@ -31,15 +33,42 @@ get '/register' do
   erb :register
 end
 
-post '/register' do; end
+post '/register' do
+  username = params[:username]
+  password = params[:password]
+  @users.create!(username, password)
+  session[:username] = username
+  redirect '/'
+rescue PG::UniqueViolation
+  session[:message] = 'Username is already taken.'
+  status 422
+  erb :register
+end
 
 get '/login' do
+  session[:login_redirect] = previous_url unless from_bad_login_redirect?
   erb :login
 end
 
-post '/login' do; end
+post '/login' do;
+  username = params[:username]
+  password = params[:password]
 
-post '/logout' do; end
+  if @users.valid_credentials?(username, password)
+    session[:username] = username
+    session[:message] = "Welcome!"
+    redirect session.delete(:login_redirect) || '/'
+  else
+    session[:message] = "Invalid credentials"
+    status 401
+    erb :login
+  end
+end
+
+post '/logout' do
+  logout
+  redirect '/'
+end
 
 get '/characters' do
   @characters_list = @characters.list

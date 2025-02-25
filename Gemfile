@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 ruby '3.2.4'
 
+gem 'bcrypt', '3.1.20'
 gem 'erubi', '1.13.1'
 gem 'pg', '1.5.9'
 gem 'rackup', '2.2.1'
