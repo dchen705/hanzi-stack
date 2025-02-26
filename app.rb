@@ -46,6 +46,7 @@ rescue PG::UniqueViolation
 end
 
 get '/login' do
+  redirect '/' if signed_in?
   session[:login_redirect] = previous_url unless from_bad_login_redirect?
   erb :login
 end
@@ -59,7 +60,7 @@ post '/login' do;
     session[:message] = "Welcome!"
     redirect session.delete(:login_redirect) || '/'
   else
-    session[:message] = "Invalid credentials"
+    session[:message] = "Invalid Credentials"
     status 401
     erb :login
   end
@@ -94,7 +95,6 @@ end
 post '/deck/new' do; end
 
 get '/deck/edit/:id' do
-  id = params[:id]
   erb :deck_edit
 end
 

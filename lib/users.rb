@@ -1,3 +1,5 @@
+require 'bcrypt'
+
 class Users
   include Database::Connection
 
@@ -8,7 +10,12 @@ class Users
   end
 
   def valid_credentials?(username, password)
-    hashed_password = query('SELECT password FROM users WHERE username = $1', [username]).values[0][0]
-    BCrypt::Password.new(hashed_password) == password
+    db_result = query('SELECT password FROM users WHERE username = $1', [username])
+    if db_result.ntuples < 1
+      false
+    else
+      hashed_password = db_result.values[0][0]
+      BCrypt::Password.new(hashed_password) == password
+    end
   end
 end
