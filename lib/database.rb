@@ -1,4 +1,5 @@
 require 'pg'
+require 'bcrypt'
 
 class Database
   NAME = ENV['RACK_ENV'] == 'test' ? 'hanzistack-test' : 'hanzistack'

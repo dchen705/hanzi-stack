@@ -3,8 +3,8 @@ require 'sinatra'
 
 require_relative 'lib/helpers'
 require_relative 'lib/database'
-require_relative 'lib/users'
-require_relative 'lib/characters'
+require_relative 'lib/tables'
+require_relative 'lib/user'
 
 configure do
   enable :sessions
@@ -19,10 +19,22 @@ configure(:development, :test) do
 end
 
 before do
-  @users = Users.new(logger)
-  @characters = Characters.new(logger)
+  @username = session[:username]
+  @user = Database::User.new(@username, logger)
+  @data = Database::Tables.new(logger)
   session[:stack] ||= {}
   @stack = session[:stack]
+end
+
+PROTECTED_ROUTES = ['/deck/*']
+
+PROTECTED_ROUTES.each do |route|
+  before route do
+    unless signed_in?
+      session[:message] = "Login required."
+      redirect previous_url
+    end
+  end
 end
 
 get '/' do
@@ -36,7 +48,7 @@ end
 post '/register' do
   username = params[:username]
   password = params[:password]
-  @users.create!(username, password)
+  @data.add_user!(username, password)
   session[:username] = username
   redirect '/'
 rescue PG::UniqueViolation
@@ -54,8 +66,7 @@ end
 post '/login' do
   username = params[:username]
   password = params[:password]
-
-  if @users.valid_credentials?(username, password)
+  if @data.valid_credentials?(username, password)
     session[:username] = username
     session[:message] = 'Welcome!'
     redirect session.delete(:login_redirect) || '/'
@@ -72,7 +83,7 @@ post '/logout' do
 end
 
 get '/characters' do
-  @characters_list = @characters.list
+  @characters = @data.list_characters
   erb :characters
 end
 
@@ -93,9 +104,8 @@ get '/decks' do
 end
 
 post '/deck/new' do
-  username = session[:username]
   deck_name = params['deck-name']
-  @users.add_deck!(username, deck_name)
+  @user.add_deck!(deck_name)
   session[:message] = "#{deck_name} has been added to your decks."
   redirect '/decks'
 end
