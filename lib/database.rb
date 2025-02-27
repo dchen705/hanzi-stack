@@ -49,7 +49,7 @@ class Database
     private
 
     def query(statement, *params)
-      @logger.info "#{statement}: #{params}" if @logger
+      @logger&.info "#{statement}: #{params}"
       @db.exec_params(statement, params.flatten)
     end
   end

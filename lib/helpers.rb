@@ -1,7 +1,7 @@
 # VIEW HELPERS
 helpers do
   def saved?(id)
-    !!@stack["#{id}"]
+    !!@stack[id.to_s]
   end
 
   def signed_in?
@@ -17,7 +17,7 @@ helpers do
   end
 
   def bad_urls_signed_in
-    [/.*\/register/, /.*\/login/]
+    [%r{.*/register}, %r{.*/login}]
   end
 
   def from_bad_login_redirect?

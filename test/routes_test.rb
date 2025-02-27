@@ -56,7 +56,7 @@ class RoutesTest < Minitest::Test
   def test_register_link
     # skip
     get '/register'
-    register_form = /<form.* action="\/register".* method="post".*>/
+    register_form = %r{<form.* action="/register".* method="post".*>}
     assert_match register_form, last_response.body
   end
 
@@ -86,7 +86,7 @@ class RoutesTest < Minitest::Test
   def test_login_link
     # skip
     get '/login'
-    login_form = /<form.* action="\/login".* method="post".*>/
+    login_form = %r{<form.* action="/login".* method="post".*>}
     assert_match login_form, last_response.body
   end
 
@@ -95,7 +95,7 @@ class RoutesTest < Minitest::Test
     get '/login', {}, admin_session
     assert_equal 302, last_response.status
     follow_redirect!
-    login_form = /<form.* action="\/login".* method="post".*>/
+    login_form = %r{<form.* action="/login".* method="post".*>}
     refute_match login_form, last_response.body
   end
 

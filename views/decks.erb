@@ -1,4 +1,14 @@
-<form action="/deck/new" action="post"><button type="submit">New Deck</button></form>
+<button class="deck-add" type="submit">New Deck</button>
 <form action="/deck/remove" action="post"><button type="submit">Remove Deck</button></form>
 <form action="/deck/edit/1" action="get" ><button type="submit">Edit Deck</button></form>
-
+<dialog>
+  <form action="/deck/new" method="post">
+    <div>
+      <label for="deck-name">Deck Name:</label>
+      <input name="deck-name" id="deck-name" required>
+    </div>
+    <button type="submit">Add Deck</button>
+    <button class="deck-add-cancel">Cancel</button>
+  </form>
+</dialog>
+<script src="/javascripts/decks_view.js"></script>

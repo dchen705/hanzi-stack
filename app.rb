@@ -40,7 +40,7 @@ post '/register' do
   session[:username] = username
   redirect '/'
 rescue PG::UniqueViolation
-  session[:message] = 'Username is already taken.'
+  session[:message] = "\"#{username}\" is already taken."
   status 422
   erb :register
 end
@@ -51,16 +51,16 @@ get '/login' do
   erb :login
 end
 
-post '/login' do;
+post '/login' do
   username = params[:username]
   password = params[:password]
 
   if @users.valid_credentials?(username, password)
     session[:username] = username
-    session[:message] = "Welcome!"
+    session[:message] = 'Welcome!'
     redirect session.delete(:login_redirect) || '/'
   else
-    session[:message] = "Invalid Credentials"
+    session[:message] = 'Invalid Credentials'
     status 401
     erb :login
   end
@@ -92,7 +92,13 @@ get '/decks' do
   erb :decks
 end
 
-post '/deck/new' do; end
+post '/deck/new' do
+  username = session[:username]
+  deck_name = params['deck-name']
+  @users.add_deck!(username, deck_name)
+  session[:message] = "#{deck_name} has been added to your decks."
+  redirect '/decks'
+end
 
 get '/deck/edit/:id' do
   erb :deck_edit
@@ -103,8 +109,6 @@ post '/deck/edit/:id' do; end
 post '/deck/remove' do; end
 
 get 'flashcards/:id' do
-  if params[:id] == 'stack'
-    @flashcards = @stack
-  end
+  @flashcards = @stack if params[:id] == 'stack'
   erb :flashcards
 end

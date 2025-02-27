@@ -15,7 +15,7 @@
     <% if signed_in? %>
       <p>Signed in as: <%= session[:username] %></p>
       <form action="/logout" method="post">
-        <button type="submit">⬇️ Log out</button>
+        <button class="logout" type="submit">⬇️ Log out</button>
       </form>
     <% end %>
     <h1>HSK Flashcards</h1>
