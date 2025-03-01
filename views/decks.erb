@@ -1,6 +1,15 @@
 <button class="deck-add" type="submit">New Deck</button>
-<form action="/deck/remove" action="post"><button type="submit">Remove Deck</button></form>
-<form action="/deck/edit/1" action="get" ><button type="submit">Edit Deck</button></form>
+<p>Decks:</p>
+<form action="/deck/edit" action="get">
+  <% @decks.each do |id, deck| %>
+    <div>
+      <label for="<%= id %>"><%= deck %></label>
+      <input type="radio" name="deck-id" id="<%= id %>" value="<%= id %>" required>
+    </div>
+  <% end %>
+  <button type="submit">Edit Deck</button>
+</form>
+
 <dialog>
   <form action="/deck/new" method="post">
     <div>

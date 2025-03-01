@@ -30,7 +30,7 @@ CREATE TABLE flashcards (
 CREATE TABLE decks (
   id serial PRIMARY KEY,
   name text NOT NULL,
-  user_id integer NOT NULL REFERENCES users (id),
+  user_id integer NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity integer NOT NULL DEFAULT 0,
   favorited boolean NOT NULL DEFAULT false

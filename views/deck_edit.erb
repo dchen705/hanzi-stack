@@ -1,1 +1,6 @@
-<p>editing deck 1</p>
+<p>Editing <%= @deck["name"] %>:</p>
+<p><%= @deck %></p>
+<form class="deck-remove" action="/deck/remove/<%= @deck['id']%>" method="post">
+  <button type="submit">Remove Deck</button>
+</form>
+<script src="/javascripts/deck_edit.js"></script>

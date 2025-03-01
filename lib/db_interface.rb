@@ -1,10 +1,11 @@
 require_relative 'database'
 
 class Database
-  class Tables
+  # General DB Interface
+  class Interface
     include Database::Connection
 
-    # User
+    # Users
     def add_user!(username, password)
       hashed_password = BCrypt::Password.create(password)
       query('INSERT INTO users (username, password) ' \
@@ -12,7 +13,7 @@ class Database
     end
 
     def valid_credentials?(username, password)
-      db_result = query('SELECT password FROM users WHERE username = $1', [username])
+      db_result = query('SELECT password FROM users WHERE username = $1', username)
       if db_result.ntuples < 1
         false
       else
@@ -31,7 +32,7 @@ class Database
       end
     end
 
-    # Deck
+    # Decks
     def add_deck!(username, deck_name)
       query('INSERT INTO decks (name, user_id) ' \
             'VALUES ($1, $2)', deck_name, user_id(username))

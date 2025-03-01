@@ -1,5 +1,6 @@
 require 'pg'
 require 'bcrypt'
+require_relative 'helpers'
 
 class Database
   NAME = ENV['RACK_ENV'] == 'test' ? 'hanzistack-test' : 'hanzistack'
@@ -35,12 +36,20 @@ class Database
       @logger = logger
     end
 
-    def clear_data
+    def clear_tables
       @db.exec('DELETE FROM users;')
       @db.exec('DELETE FROM characters;')
       @db.exec('DELETE FROM decks;')
       @db.exec('DELETE FROM flashcards;')
       @db.exec('DELETE FROM decks_flashcards;')
+    end
+
+    def reset_sequences
+      @db.exec('ALTER SEQUENCE users_id_seq RESTART WITH 1;')
+      @db.exec('ALTER SEQUENCE characters_id_seq RESTART WITH 1;')
+      @db.exec('ALTER SEQUENCE decks_id_seq RESTART WITH 1;')
+      @db.exec('ALTER SEQUENCE flashcards_id_seq RESTART WITH 1;')
+      @db.exec('ALTER SEQUENCE decks_flashcards_id_seq RESTART WITH 1;')
     end
 
     def close_connection
@@ -50,7 +59,10 @@ class Database
     private
 
     def query(statement, *params)
-      @logger&.info "#{statement}: #{params}"
+      backtrace = caller_locations.first
+      file = File.basename(backtrace.path)
+      line = backtrace.lineno
+      @logger&.info "file: #{file}.#{line} - #{statement}: #{params}"
       @db.exec_params(statement, params.flatten)
     end
   end

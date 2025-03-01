@@ -3,8 +3,8 @@ require 'sinatra'
 
 require_relative 'lib/helpers'
 require_relative 'lib/database'
-require_relative 'lib/tables'
-require_relative 'lib/user'
+require_relative 'lib/db_interface'
+require_relative 'lib/db_user'
 
 configure do
   enable :sessions
@@ -21,7 +21,7 @@ end
 before do
   @username = session[:username]
   @user = Database::User.new(@username, logger)
-  @data = Database::Tables.new(logger)
+  @data = Database::Interface.new(logger)
   session[:stack] ||= {}
   @stack = session[:stack]
 end
@@ -31,10 +31,14 @@ PROTECTED_ROUTES = ['/deck/*']
 PROTECTED_ROUTES.each do |route|
   before route do
     unless signed_in?
-      session[:message] = "Login required."
+      session[:message] = 'Login required.'
       redirect previous_url
     end
   end
+end
+
+after do
+  @data.close_connection
 end
 
 get '/' do
@@ -52,7 +56,7 @@ post '/register' do
   session[:username] = username
   redirect '/'
 rescue PG::UniqueViolation
-  session[:message] = "\"#{username}\" is already taken."
+  session[:message] = "#{username} is already taken."
   status 422
   erb :register
 end
@@ -100,6 +104,7 @@ post '/stack/remove' do
 end
 
 get '/decks' do
+  @decks = signed_in? ? @user.decks : {}
   erb :decks
 end
 
@@ -110,13 +115,26 @@ post '/deck/new' do
   redirect '/decks'
 end
 
-get '/deck/edit/:id' do
-  erb :deck_edit
+get '/deck/edit' do
+  @deck_id = params['deck-id']
+  @deck = signed_in? ? @user.deck(@deck_id) : {}
+  if @deck
+    erb :deck_edit
+  else
+    session[:message] = 'Deck not found.'
+    redirect '/decks'
+  end
 end
 
-post '/deck/edit/:id' do; end
-
-post '/deck/remove' do; end
+post '/deck/remove/:id' do
+  id = params[:id]
+  @deck = @user.deck(id) if signed_in?
+  if @deck && params['confirm']
+    @user.remove_deck!(id)
+    session[:message] = "#{@deck['name']} has been deleted."
+  end
+  redirect '/decks'
+end
 
 get 'flashcards/:id' do
   @flashcards = @stack if params[:id] == 'stack'

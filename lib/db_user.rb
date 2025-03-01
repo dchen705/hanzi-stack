@@ -3,16 +3,17 @@ require_relative 'database'
 class Database
   class UserNotFoundError < StandardError; end
 
+  # User-specific DB Interface
   class User
     include Database::Connection
 
-    def self.new(username, logger)
-      super(username, logger)
+    def self.new(username, logger=nil)
+      super
     rescue UserNotFoundError
-      return nil
+      nil
     end
 
-    def initialize(username, logger)
+    def initialize(username, logger=nil)
       raise UserNotFoundError if username.nil?
 
       super(logger)
@@ -20,14 +21,30 @@ class Database
       @username = username
     end
 
-    def decks; end
+    def decks
+      query('SELECT * FROM decks WHERE user_id=$1', @user_id).to_h do |tuple|
+        [tuple['id'], tuple]
+      end
+    end
+
+    def deck(id)
+      query('SELECT * FROM decks WHERE id=$1 AND user_id=$2', id, @user_id).first
+    end
 
     def add_deck!(deck_name)
       query('INSERT INTO decks (name, user_id) ' \
             'VALUES ($1, $2)', deck_name, @user_id)
     end
 
+    def remove_deck!(id)
+      query('DELETE FROM decks WHERE id=$1', id)
+    end
+
     def flashcards; end
+
+    def to_s
+      @username
+    end
 
     private
 
