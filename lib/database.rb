@@ -62,7 +62,7 @@ class Database
       backtrace = caller_locations.first
       file = File.basename(backtrace.path)
       line = backtrace.lineno
-      @logger&.info "file: #{file}.#{line} - #{statement}: #{params}"
+      @logger&.info "file: #{file}:#{line} - #{statement}: #{params}"
       @db.exec_params(statement, params.flatten)
     end
   end

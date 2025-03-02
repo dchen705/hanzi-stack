@@ -1,9 +1,37 @@
+<% if @deck_id %>
+  <h3>Adding to <a class="edit-link" href="/deck/edit?deck-id=<%= @deck_id %>"><%= @deck_name %></a></h3>
+<% end %>
+<form action="/search/characters" method="get">
+  <label>Editing:</label>
+  <select>
+  <option selected disabled>----Select Deck----</option>
+    <% @decks.each do |deck| %>
+      <option data-deck-id="<%= deck['id'] %>" data-deck-name="<%= deck['name'] %>"><%= deck['name'] %></option>
+    <% end %>
+  </select>
+  <input type="hidden" name="deck-id" value="<%= @deck_id %>">
+  <input type="hidden" name="deck-name" value="<%= @deck_name %>">
+  <button type="submit">Go</button>
+</form>
 <% @characters.each do |character| %>
   <div>
+    <% if @deck_id %>
+      <% if saved_in?(character["id"], @flashcards) do |cards| %>
+      <% cards.to_h { |card| [card['character_id'], true] }%>
+      <% end %>
+        <button class="deck-add" data-character-id="<%= character['id'] %>" disabled>✅ In Deck</button>
+        <button class="deck-remove" data-character-id="<%= character['id'] %>">❌ Remove from Deck</button>
+      <% else %>
+        <button class="deck-add" data-character-id="<%= character['id'] %>">➕ Add to Deck</button>
+        <button class="deck-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Deck</button>
+      <% end %>
+    <% end %>
+
     <span><%= character["hanzi"] %></span>
     <span><%= character["pinyin"] %></span>
     <span><%= character["meaning"] %></span>
-  <% if saved?(character["id"]) %>
+
+    <% if saved_in?(character["id"], @stack) %>
       <button class="list-add" data-character-id="<%= character['id'] %>" disabled>✅ Saved</button>
       <button class="list-remove" data-character-id="<%= character['id'] %>">❌ Remove from Stack</button>
     <% else %>
@@ -12,4 +40,4 @@
     <% end %>
   </div>
 <% end %>
-<script src="/javascripts/characters_view.js"></script>
+<script src="/javascripts/characters_search.js"></script>

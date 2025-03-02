@@ -1,7 +1,8 @@
 # VIEW HELPERS
 helpers do
-  def saved?(id)
-    !!@stack[id.to_s]
+  def saved_in?(id, collection)
+    collection = yield(collection) if block_given?
+    !!collection[id.to_s]
   end
 
   def signed_in?
@@ -25,4 +26,9 @@ helpers do
       previous_url =~ bad_url
     end
   end
+end
+
+# ROUTE HELPERS
+def normalize(value)
+  value.nil? || value.empty? ? nil : value
 end

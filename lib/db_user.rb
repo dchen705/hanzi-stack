@@ -7,6 +7,8 @@ class Database
   class User
     include Database::Connection
 
+    attr_reader :user_id
+
     def self.new(username, logger=nil)
       super
     rescue UserNotFoundError
@@ -28,7 +30,8 @@ class Database
     end
 
     def deck(id)
-      query('SELECT * FROM decks WHERE id=$1 AND user_id=$2', id, @user_id).first
+      result = query('SELECT * FROM decks WHERE id=$1 AND user_id=$2', id, @user_id)
+      result.ntuples < 1 ? {} : result.first
     end
 
     def add_deck!(deck_name)
@@ -40,7 +43,12 @@ class Database
       query('DELETE FROM decks WHERE id=$1', id)
     end
 
-    def flashcards; end
+    def flashcards(deck_id)
+      query('SELECT * FROM flashcards ' \
+              'JOIN decks_flashcards ' \
+              'ON flashcards.id = flashcard_id ' \
+              'WHERE deck_id=$1', deck_id)
+    end
 
     def to_s
       @username

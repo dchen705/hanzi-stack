@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+  // Add Buttons
   document.querySelectorAll('.list-add').forEach(function(button) {
     button.addEventListener('click', function() {
       var characterId = this.getAttribute('data-character-id');
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
   })
 
+  // Remove Buttons
   document.querySelectorAll('.list-remove').forEach(function(button) {
     button.addEventListener('click', function() {
       var characterId = this.getAttribute('data-character-id')
@@ -36,4 +39,24 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+  // Select
+  const currentOption = document.querySelector("select ~ input[name='deck-name']").value;
+  const selectDeckId = document.querySelector("select ~ input[name='deck-id']");
+  const selectDeckName = document.querySelector("select ~ input[name='deck-name']");
+  document.querySelectorAll('option').forEach(function(option) {
+    var optionDeckId = option.getAttribute('data-deck-id');
+    var optionDeckName = option.getAttribute('data-deck-name');
+    if (option.textContent == currentOption) {
+      option.selected = true;
+      selectDeckId.value = optionDeckId;
+      selectDeckName.value = optionDeckName;
+    };
+    option.addEventListener('click', function() {
+      selectDeckId.value = optionDeckId;
+      selectDeckName.value = optionDeckName;
+    });
+  });
+
+
 });

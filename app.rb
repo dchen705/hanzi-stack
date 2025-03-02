@@ -86,7 +86,12 @@ post '/logout' do
   redirect '/'
 end
 
-get '/characters' do
+get '/search/:hanzi' do
+  @deck = signed_in? ? @user.deck(normalize(params['deck-id'])) : {}
+  @deck_id = @deck['id']
+  @deck_name = @deck['name']
+  @flashcards = @user.flashcards(@deck_id)
+  @decks = signed_in? ? @user.decks.values : {}
   @characters = @data.list_characters
   erb :characters
 end
@@ -116,8 +121,8 @@ post '/deck/new' do
 end
 
 get '/deck/edit' do
-  @deck_id = params['deck-id']
-  @deck = signed_in? ? @user.deck(@deck_id) : {}
+  @deck = signed_in? ? @user.deck(params['deck-id']) : {}
+  @deck_id = @deck['id']
   if @deck
     erb :deck_edit
   else

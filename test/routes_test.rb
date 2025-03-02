@@ -197,4 +197,9 @@ class RoutesTest < Minitest::Test
     assert_equal 200, last_response.status
     assert_includes last_response.body, 'yī'
   end
+
+  # def test_characters_view_diff_user
+  #   # get characters page logged in as alt user but params of deck of admin
+  #   # refute page has deck info
+  # end
 end

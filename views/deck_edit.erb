@@ -1,6 +1,11 @@
 <p>Editing <%= @deck["name"] %>:</p>
 <p><%= @deck %></p>
-<form class="deck-remove" action="/deck/remove/<%= @deck['id']%>" method="post">
+<form action="../search/characters" method="get">
+  <input type="hidden" name="deck-id" value="<%= @deck_id %>">
+  <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
+  <button type="submit">Add Characters</button>
+</form>
+<form class="deck-remove" action="/deck/remove/<%= @deck_id%>" method="post">
   <button type="submit">Remove Deck</button>
 </form>
 <script src="/javascripts/deck_edit.js"></script>
