@@ -19,7 +19,7 @@ class Database
       raise UserNotFoundError if username.nil?
 
       super(logger)
-      @user_id = user_id(username)
+      @user_id = get_user_id(username)
       @username = username
     end
 
@@ -45,9 +45,41 @@ class Database
 
     def flashcards(deck_id)
       query('SELECT * FROM flashcards ' \
-              'JOIN decks_flashcards ' \
+            'JOIN decks_flashcards ' \
               'ON flashcards.id = flashcard_id ' \
-              'WHERE deck_id=$1', deck_id)
+            'JOIN characters ' \
+              'ON characters.id = character_id ' \
+            'WHERE deck_id=$1', deck_id)
+    end
+
+    def create_card!(character_id)
+      result = query('SELECT id FROM flashcards WHERE user_id=$1 AND character_id=$2', @user_id, character_id)
+      if result.ntuples < 1
+        query('INSERT INTO flashcards (user_id, character_id) ' \
+              'VALUES ($1, $2)', @user_id, character_id)
+        result = query('SELECT id FROM flashcards WHERE user_id=$1 AND character_id=$2', @user_id, character_id)
+      end
+      result.values[0][0]
+    end
+
+    def add_card!(deck_id, flashcard_id)
+      query('INSERT INTO decks_flashcards (deck_id, flashcard_id) ' \
+            'VALUES ($1, $2)', deck_id, flashcard_id)
+    rescue PG::UniqueViolation
+      return
+    end
+
+    def remove_card!(deck_id, flashcard_id)
+      query('DELETE FROM decks_flashcards WHERE deck_id=$1 AND flashcard_id=$2', deck_id, flashcard_id)
+      result = query('SELECT id FROM decks_flashcards WHERE flashcard_id=$1', flashcard_id)
+      if result.ntuples < 1
+        query('DELETE FROM flashcards WHERE id=$1', flashcard_id)
+      end
+    end
+
+    def get_flashcard_id(character_id)
+      result = query('SELECT id FROM flashcards WHERE user_id=$1 AND character_id=$2', @user_id, character_id)
+      result.ntuples < 1 ? nil : result.values[0][0]
     end
 
     def to_s
@@ -56,7 +88,7 @@ class Database
 
     private
 
-    def user_id(username)
+    def get_user_id(username)
       query('SELECT id FROM users WHERE username=$1', username).values[0][0]
     rescue NoMethodError
       raise UserNotFoundError

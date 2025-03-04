@@ -87,11 +87,12 @@ post '/logout' do
 end
 
 get '/search/:hanzi' do
-  @deck = signed_in? ? @user.deck(normalize(params['deck-id'])) : {}
+  id = normalize(params['deck-id'])
+  @deck = @user&.deck(id) || {}
   @deck_id = @deck['id']
   @deck_name = @deck['name']
-  @flashcards = @user.flashcards(@deck_id)
-  @decks = signed_in? ? @user.decks.values : {}
+  @flashcards = @user&.flashcards(@deck_id) || {}
+  @decks = @user&.decks&.values || {}
   @characters = @data.list_characters
   erb :characters
 end
@@ -121,9 +122,11 @@ post '/deck/new' do
 end
 
 get '/deck/edit' do
-  @deck = signed_in? ? @user.deck(params['deck-id']) : {}
+  id = normalize(params['deck-id'])
+  @deck = @user&.deck(id) || {}
   @deck_id = @deck['id']
-  if @deck
+  @flashcards = @user&.flashcards(@deck_id) || {}
+  if @deck_id
     erb :deck_edit
   else
     session[:message] = 'Deck not found.'
@@ -131,10 +134,24 @@ get '/deck/edit' do
   end
 end
 
-post '/deck/remove/:id' do
-  id = params[:id]
-  @deck = @user.deck(id) if signed_in?
-  if @deck && params['confirm']
+post '/deck/edit/add' do
+  deck_id = params['deck-id']
+  character_id = params['character-id']
+  flashcard_id = @user&.create_card!(character_id)
+  @user&.add_card!(deck_id, flashcard_id)
+end
+
+post '/deck/edit/remove' do
+  deck_id = params['deck-id']
+  character_id = params['character-id']
+  flashcard_id = @user.get_flashcard_id(character_id)
+  @user&.remove_card!(deck_id, flashcard_id)
+end
+
+post '/deck/remove' do
+  id = params['deck-id']
+  @deck = @user&.deck(id)
+  if @deck['id'] && params['confirm']
     @user.remove_deck!(id)
     session[:message] = "#{@deck['name']} has been deleted."
   end
@@ -145,3 +162,4 @@ get 'flashcards/:id' do
   @flashcards = @stack if params[:id] == 'stack'
   erb :flashcards
 end
+

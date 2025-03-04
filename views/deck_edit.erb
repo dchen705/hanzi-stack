@@ -1,11 +1,20 @@
 <p>Editing <%= @deck["name"] %>:</p>
 <p><%= @deck %></p>
+<% @flashcards.each do |card| %>
+  <div>
+    <span><%= card['hanzi']%></span>
+    <span><%= card['pinyin']%></span>
+    <span><%= card['meaning']%></span>
+    <span><%= card['user_proficiency']%></span>
+  </div>
+<% end %>
 <form action="../search/characters" method="get">
   <input type="hidden" name="deck-id" value="<%= @deck_id %>">
   <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
   <button type="submit">Add Characters</button>
 </form>
-<form class="deck-remove" action="/deck/remove/<%= @deck_id%>" method="post">
+<form class="deck-remove" action="/deck/remove" method="post">
+  <input type="hidden" name="deck-id" value="<%= @deck_id %>">
   <button type="submit">Remove Deck</button>
 </form>
 <script src="/javascripts/deck_edit.js"></script>

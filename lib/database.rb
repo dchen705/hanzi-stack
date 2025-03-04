@@ -38,7 +38,6 @@ class Database
 
     def clear_tables
       @db.exec('DELETE FROM users;')
-      @db.exec('DELETE FROM characters;')
       @db.exec('DELETE FROM decks;')
       @db.exec('DELETE FROM flashcards;')
       @db.exec('DELETE FROM decks_flashcards;')

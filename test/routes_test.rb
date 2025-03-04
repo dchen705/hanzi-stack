@@ -52,7 +52,7 @@ class RoutesTest < Minitest::Test
   end
 
   def test_home_logged_in
-    skip
+    # skip
     get '/', {}, admin_session
     assert_equal 200, last_response.status
     assert_equal 'text/html;charset=utf-8', last_response['Content-Type']
@@ -62,14 +62,14 @@ class RoutesTest < Minitest::Test
   end
 
   def test_register_link
-    skip
+    # skip
     get '/register'
     register_form = %r{<form.* action="/register".* method="post".*>}
     assert_match register_form, last_response.body
   end
 
   def test_register_success
-    skip
+    # skip
     post '/register', { username: 'test', password: 'password' }
     assert_equal 302, last_response.status
 
@@ -78,7 +78,7 @@ class RoutesTest < Minitest::Test
   end
 
   def test_register_error_dup_username
-    skip
+    # skip
     post '/register', { username: 'test', password: 'password' }
     assert_equal 302, last_response.status
 
@@ -88,18 +88,18 @@ class RoutesTest < Minitest::Test
   end
 
   def test_register_fail
-    skip
+    # skip
   end
 
   def test_login_link
-    skip
+    # skip
     get '/login'
     login_form = %r{<form.* action="/login".* method="post".*>}
     assert_match login_form, last_response.body
   end
 
   def test_login_again_redirect
-    skip
+    # skip
     get '/login', {}, admin_session
     assert_equal 302, last_response.status
     follow_redirect!
@@ -108,7 +108,7 @@ class RoutesTest < Minitest::Test
   end
 
   def test_login_success
-    skip
+    # skip
     post '/login', { username: 'admin', password: 'secret' }
     assert_equal 302, last_response.status
     follow_redirect!
@@ -116,14 +116,14 @@ class RoutesTest < Minitest::Test
   end
 
   def test_login_fail
-    skip
+    # skip
     post '/login', { username: 'test', password: 'password' }
     assert_equal 401, last_response.status
     assert_includes last_response.body, 'Invalid Credentials'
   end
 
   def test_logout
-    skip
+    # skip
     post '/login', { username: 'admin', password: 'secret' }
     post '/logout'
     assert_equal 302, last_response.status
@@ -132,7 +132,7 @@ class RoutesTest < Minitest::Test
   end
 
   def test_view_decks
-    skip
+    # skip
     get '/decks'
     refute_includes last_response.body, "AdminsFirstDeck"
     post '/login', { username: 'admin', password: 'secret' }
@@ -141,14 +141,14 @@ class RoutesTest < Minitest::Test
   end
 
   def test_add_deck
-    skip
+    # skip
     post '/deck/new', { 'deck-name' => 'AdminsSecondDeck' }, admin_session
     get '/decks', {}, admin_session
     assert_includes last_response.body, "AdminsSecondDeck"
   end
 
   def test_protect_deck_route
-    skip
+    # skip
     post '/deck/new', { 'deck-name' => 'NoOwnersDeck' }
     assert_equal 302, last_response.status
     follow_redirect!
@@ -158,37 +158,56 @@ class RoutesTest < Minitest::Test
   end
 
   def test_deck_edit_link
+    # skip
     get '/deck/edit', { 'deck-id' => '1' }, admin_session
     assert_includes last_response.body, 'Editing AdminsFirstDeck'
   end
 
   def test_deck_not_found
+    # skip
     get '/deck/edit', { 'deck-id' => '100' }, admin_session
     assert_equal 'Deck not found.', session[:message]
     assert_equal 302, last_response.status
   end
 
   def test_deck_edit_as_different_user
+    # skip
     get 'deck/edit', { 'deck-id' => '1' }, { 'rack.session' => { username: 'alt' } }
     assert_equal 'Deck not found.', session[:message]
     assert_equal 302, last_response.status
   end
 
   def test_deck_remove_success
+    # skip
     get '/decks', {}, admin_session
     assert_includes last_response.body, 'AdminsFirstDeck'
-    post 'deck/remove/1', { 'confirm' => 'true' }, admin_session
+    post 'deck/remove', { 'deck-id' => '1', 'confirm' => 'true' }, admin_session
     assert_equal 'AdminsFirstDeck has been deleted.', session[:message]
   end
 
   def test_deck_remove_no_login
-    post 'deck/remove/1', { 'confirm' => 'true' }
+    # skip
+    post 'deck/remove', { 'deck-id' => '1', 'confirm' => 'true' }
     refute_equal 'AdminsFirstDeck has been deleted.', session[:message]
   end
 
   def test_deck_remove_not_found
-    post 'deck/remove/100', { 'confirm' => 'true' }, admin_session
+    # skip
+    post 'deck/remove', { 'confirm' => 'true' }, admin_session
     assert_nil session[:message]
+  end
+
+  def test_add_card
+    post '/deck/edit/add', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
+    get '/deck/edit', { 'deck-id' => '1' }, admin_session
+    assert_includes last_response.body, '一'
+  end
+
+  def test_remove_card
+    post '/deck/edit/add', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
+    post '/deck/edit/remove', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
+    get '/deck/edit', { 'deck-id' => '1' }, admin_session
+    refute_includes last_response.body, '一'
   end
 
   def test_get_characters_page

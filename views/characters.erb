@@ -1,5 +1,5 @@
 <% if @deck_id %>
-  <h3>Adding to <a class="edit-link" href="/deck/edit?deck-id=<%= @deck_id %>"><%= @deck_name %></a></h3>
+  <h3>Adding to <a class="edit-link" data-deck-id = "<%= @deck_id %>" href="/deck/edit?deck-id=<%= @deck_id %>"><%= @deck_name %></a></h3>
 <% end %>
 <form action="/search/characters" method="get">
   <label>Editing:</label>
@@ -32,11 +32,11 @@
     <span><%= character["meaning"] %></span>
 
     <% if saved_in?(character["id"], @stack) %>
-      <button class="list-add" data-character-id="<%= character['id'] %>" disabled>✅ Saved</button>
-      <button class="list-remove" data-character-id="<%= character['id'] %>">❌ Remove from Stack</button>
+      <button class="stack-add" data-character-id="<%= character['id'] %>" disabled>✅ Saved</button>
+      <button class="stack-remove" data-character-id="<%= character['id'] %>">❌ Remove from Stack</button>
     <% else %>
-      <button class="list-add" data-character-id="<%= character['id'] %>">➕ Add to Stack</button>
-      <button class="list-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Stack</button>
+      <button class="stack-add" data-character-id="<%= character['id'] %>">➕ Add to Stack</button>
+      <button class="stack-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Stack</button>
     <% end %>
   </div>
 <% end %>
