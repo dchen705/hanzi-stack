@@ -43,6 +43,7 @@ CREATE TABLE decks_flashcards (
   added_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- add seed dump for characters
 
 -- COPY hanzi FROM 'data/test.csv' WITH (FORMAT csv, HEADER true);
 

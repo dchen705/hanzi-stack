@@ -5,6 +5,8 @@ class Database
   class Interface
     include Database::Connection
 
+    SEARCH_PAGE_LIMIT = 10
+
     # Users
     def add_user!(username, password)
       hashed_password = BCrypt::Password.create(password)
@@ -23,13 +25,22 @@ class Database
     end
 
     # Characters
-    def list_characters
-      query('SELECT * FROM characters;').map do |tuple|
+    def list_characters(page_number)
+      offset = (page_number - 1) * SEARCH_PAGE_LIMIT
+      query("SELECT * FROM characters OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT};").map do |tuple|
         { 'id' => tuple['id'],
           'hanzi' => tuple['hanzi'],
           'pinyin' => tuple['pinyin'],
           'meaning' => tuple['meaning'] }
       end
+    end
+
+    def detect_next_page(page_number)
+      detect_page(page_number, SEARCH_PAGE_LIMIT)
+    end
+
+    def detect_previous_page(page_number)
+      detect_page(page_number, -SEARCH_PAGE_LIMIT)
     end
 
     # Decks
@@ -42,6 +53,13 @@ class Database
 
     def user_id(username)
       query('SELECT id FROM users WHERE username=$1', username).values[0][0]
+    end
+
+    def detect_page(page_number, offset_change)
+      offset = ((page_number - 1) * SEARCH_PAGE_LIMIT) + offset_change
+      return false if offset.negative?
+
+      query("SELECT id FROM characters OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT}").ntuples >= 1
     end
   end
 end

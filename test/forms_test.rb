@@ -1,3 +1,4 @@
+# rubocop:disable Layout/CommentIndentation
 # deck_edit
   # required select
 

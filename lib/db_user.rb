@@ -9,13 +9,13 @@ class Database
 
     attr_reader :user_id
 
-    def self.new(username, logger=nil)
+    def self.new(username, logger = nil)
       super
     rescue UserNotFoundError
       nil
     end
 
-    def initialize(username, logger=nil)
+    def initialize(username, logger = nil)
       raise UserNotFoundError if username.nil?
 
       super(logger)
@@ -72,9 +72,7 @@ class Database
     def remove_card!(deck_id, flashcard_id)
       query('DELETE FROM decks_flashcards WHERE deck_id=$1 AND flashcard_id=$2', deck_id, flashcard_id)
       result = query('SELECT id FROM decks_flashcards WHERE flashcard_id=$1', flashcard_id)
-      if result.ntuples < 1
-        query('DELETE FROM flashcards WHERE id=$1', flashcard_id)
-      end
+      query('DELETE FROM flashcards WHERE id=$1', flashcard_id) if result.ntuples < 1
     end
 
     def get_flashcard_id(character_id)

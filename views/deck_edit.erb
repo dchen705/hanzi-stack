@@ -8,7 +8,8 @@
     <span><%= card['user_proficiency']%></span>
   </div>
 <% end %>
-<form action="../search/characters" method="get">
+<form action="../search/characters?" method="get">
+  <input type="hidden" name="page" value="1">
   <input type="hidden" name="deck-id" value="<%= @deck_id %>">
   <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
   <button type="submit">Add Characters</button>

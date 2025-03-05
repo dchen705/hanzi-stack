@@ -1,7 +1,7 @@
-<% if @deck_id %>
-  <h3>Adding to <a class="edit-link" data-deck-id = "<%= @deck_id %>" href="/deck/edit?deck-id=<%= @deck_id %>"><%= @deck_name %></a></h3>
+<% if @deck['id'] %>
+  <h3>Adding to <a class="edit-link" data-deck-id = "<%= @deck['id'] %>" href="/deck/edit?deck-id=<%= @deck['id'] %>"><%= @deck['name'] %></a></h3>
 <% end %>
-<form action="/search/characters" method="get">
+<form action="/search/characters?" method="get">
   <label>Editing:</label>
   <select>
   <option selected disabled>----Select Deck----</option>
@@ -9,13 +9,14 @@
       <option data-deck-id="<%= deck['id'] %>" data-deck-name="<%= deck['name'] %>"><%= deck['name'] %></option>
     <% end %>
   </select>
-  <input type="hidden" name="deck-id" value="<%= @deck_id %>">
-  <input type="hidden" name="deck-name" value="<%= @deck_name %>">
+  <input type="hidden" name="page" value="1">
+  <input type="hidden" name="deck-id" value="<%= @deck['id'] %>">
+  <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
   <button type="submit">Go</button>
 </form>
 <% @characters.each do |character| %>
   <div>
-    <% if @deck_id %>
+    <% if @deck['id'] %>
       <% if saved_in?(character["id"], @flashcards) do |cards| %>
       <% cards.to_h { |card| [card['character_id'], true] }%>
       <% end %>
@@ -39,5 +40,21 @@
       <button class="stack-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Stack</button>
     <% end %>
   </div>
+<% end %>
+<% if @is_prev_page %>
+  <form action="/search/characters?" method="get">
+    <input type="hidden" name="page" value="<%= params['page'] - 1 %>">
+    <input type="hidden" name="deck-id" value="<%= @deck['id'] %>">
+    <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
+    <button type="submit">Previous Page</button>
+  </form>
+<% end %>
+<% if @is_next_page %>
+  <form action="/search/characters?" method="get">
+    <input type="hidden" name="page" value="<%= params['page'] + 1 %>">
+    <input type="hidden" name="deck-id" value="<%= @deck['id'] %>">
+    <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
+    <button type="submit">Next Page</button>
+  </form>
 <% end %>
 <script src="/javascripts/characters_search.js"></script>

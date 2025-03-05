@@ -8,6 +8,7 @@ require 'pry'
 
 require_relative '../app'
 
+# rubocop: disable Metrics/ClassLength
 class RoutesTest < Minitest::Test
   include Rack::Test::Methods
 
@@ -134,17 +135,17 @@ class RoutesTest < Minitest::Test
   def test_view_decks
     # skip
     get '/decks'
-    refute_includes last_response.body, "AdminsFirstDeck"
+    refute_includes last_response.body, 'AdminsFirstDeck'
     post '/login', { username: 'admin', password: 'secret' }
     get '/decks'
-    assert_includes last_response.body, "AdminsFirstDeck"
+    assert_includes last_response.body, 'AdminsFirstDeck'
   end
 
   def test_add_deck
     # skip
     post '/deck/new', { 'deck-name' => 'AdminsSecondDeck' }, admin_session
     get '/decks', {}, admin_session
-    assert_includes last_response.body, "AdminsSecondDeck"
+    assert_includes last_response.body, 'AdminsSecondDeck'
   end
 
   def test_protect_deck_route
@@ -198,23 +199,46 @@ class RoutesTest < Minitest::Test
   end
 
   def test_add_card
+    # skip
     post '/deck/edit/add', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
     get '/deck/edit', { 'deck-id' => '1' }, admin_session
     assert_includes last_response.body, '一'
   end
 
   def test_remove_card
+    # skip
     post '/deck/edit/add', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
     post '/deck/edit/remove', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
     get '/deck/edit', { 'deck-id' => '1' }, admin_session
     refute_includes last_response.body, '一'
   end
 
-  def test_get_characters_page
-    skip
-    get '/characters'
+  def test_search_pagination_buttons_exists
+    # skip
+    next_page_button = %r{<button.* type="submit".*>Next Page</button>}
+    prev_page_button = %r{<button.* type="submit".*>Previous Page</button>}
+    get '/search/characters'
+    refute_match prev_page_button, last_response.body
+    assert_match next_page_button, last_response.body
+    get '/search/characters', { 'page' => '2' }
+    assert_match prev_page_button, last_response.body
+    assert_match next_page_button, last_response.body
+  end
+
+  def test_search_char_page_1
+    # skip
+    get '/search/characters'
     assert_equal 200, last_response.status
     assert_includes last_response.body, 'yī'
+  end
+
+  def test_search_char_additional_pages
+    # skip
+    get '/search/characters', { 'page' => '2' }
+    assert_includes last_response.body, 'zhuān'
+    get '/search/characters', { 'page' => '3' }
+    refute_includes last_response.body, 'zhuān'
+    assert_includes last_response.body, 'diū'
   end
 
   # def test_characters_view_diff_user

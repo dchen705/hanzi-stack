@@ -29,6 +29,21 @@ helpers do
 end
 
 # ROUTE HELPERS
-def normalize(value)
-  value.nil? || value.empty? ? nil : value
+def normalize!(params)
+  normalize_deck_id!(params)
+  normalize_page_number!(params)
+end
+
+def normalize_deck_id!(params)
+  id = params['deck-id']
+  params['deck-id'] = nil if id.nil? || id.empty? || id.to_i.zero?
+end
+
+def normalize_page_number!(params)
+  page_number = params['page']
+  if page_number.nil? || page_number.to_i < 1
+    params['page'] = 1
+  else
+    params['page'] = page_number.to_i
+  end
 end

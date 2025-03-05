@@ -87,13 +87,13 @@ post '/logout' do
 end
 
 get '/search/:hanzi' do
-  id = normalize(params['deck-id'])
-  @deck = @user&.deck(id) || {}
-  @deck_id = @deck['id']
-  @deck_name = @deck['name']
+  normalize!(params)
+  @deck = @user&.deck(params['deck-id']) || {}
   @flashcards = @user&.flashcards(@deck_id) || {}
   @decks = @user&.decks&.values || {}
-  @characters = @data.list_characters
+  @characters = @data.list_characters(params['page'])
+  @is_next_page = @data.detect_next_page(params['page'])
+  @is_prev_page = @data.detect_previous_page(params['page'])
   erb :characters
 end
 
@@ -122,8 +122,8 @@ post '/deck/new' do
 end
 
 get '/deck/edit' do
-  id = normalize(params['deck-id'])
-  @deck = @user&.deck(id) || {}
+  normalize!(params)
+  @deck = @user&.deck(params['deck-id']) || {}
   @deck_id = @deck['id']
   @flashcards = @user&.flashcards(@deck_id) || {}
   if @deck_id
@@ -162,4 +162,3 @@ get 'flashcards/:id' do
   @flashcards = @stack if params[:id] == 'stack'
   erb :flashcards
 end
-
