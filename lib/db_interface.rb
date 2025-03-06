@@ -25,13 +25,20 @@ class Database
     end
 
     # Characters
-    def list_characters(page_number)
+    def list_characters(page_number, filters)
       offset = (page_number - 1) * SEARCH_PAGE_LIMIT
-      query("SELECT * FROM characters OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT};").map do |tuple|
+      sql = search_query(offset)
+      sql_filters = normalize_filters(filters)
+      query(sql, *sql_filters.values).map do |tuple|
         { 'id' => tuple['id'],
           'hanzi' => tuple['hanzi'],
           'pinyin' => tuple['pinyin'],
-          'meaning' => tuple['meaning'] }
+          'meaning' => tuple['meaning'],
+          'frequency' => tuple['frequency'],
+          'radical' => tuple['radical'],
+          'gs_num' => tuple['gs_num'],
+          'hsk2' => tuple['hsk2'],
+          'hsk3' => tuple['hsk3'], }
       end
     end
 
@@ -60,6 +67,29 @@ class Database
       return false if offset.negative?
 
       query("SELECT id FROM characters OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT}").ntuples >= 1
+    end
+
+    def search_query(offset)
+      <<~SQL
+        SELECT * FROM characters
+        WHERE hanzi LIKE $1
+        AND pinyin LIKE $2
+        AND meaning LIKE $3
+        AND radical LIKE $4
+        AND hsk2 LIKE $5
+        AND hsk3 LIKE $6
+        OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT};
+      SQL
+    end
+
+    def normalize_filters(filters)
+      sql_filters = filters.dup
+      filters.each do |key, value|
+        value = value.empty? ? '%' : value.strip
+        value = "%#{value}%" if key == 'meaning' || key == 'radical'
+        sql_filters[key] = value
+      end
+      sql_filters
     end
   end
 end

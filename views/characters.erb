@@ -14,47 +14,92 @@
   <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
   <button type="submit">Go</button>
 </form>
-<% @characters.each do |character| %>
-  <div>
-    <% if @deck['id'] %>
-      <% if saved_in?(character["id"], @flashcards) do |cards| %>
-      <% cards.to_h { |card| [card['character_id'], true] }%>
-      <% end %>
-        <button class="deck-add" data-character-id="<%= character['id'] %>" disabled>✅ In Deck</button>
-        <button class="deck-remove" data-character-id="<%= character['id'] %>">❌ Remove from Deck</button>
-      <% else %>
-        <button class="deck-add" data-character-id="<%= character['id'] %>">➕ Add to Deck</button>
-        <button class="deck-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Deck</button>
-      <% end %>
-    <% end %>
 
-    <span><%= character["hanzi"] %></span>
-    <span><%= character["pinyin"] %></span>
-    <span><%= character["meaning"] %></span>
+<form class="filter-form" action="/search/characters" method="get">
+<input type="hidden" name="deck-id" value="<%= @deck['id'] %>">
+<input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
+<table>
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Hanzi</th>
+      <th scope="col">Pinyin</th>
+      <th scope="col">Meaning</th>
+      <th scope="col">Frequency Rank</th>
+      <th scope="col">Radical</th>
+      <th scope="col">General Standard</th>
+      <th scope="col">HSK 2</th>
+      <th scope="col">HSK 3</th>
+      <th scope="col"></th>
+    </tr>
 
-    <% if saved_in?(character["id"], @stack) %>
-      <button class="stack-add" data-character-id="<%= character['id'] %>" disabled>✅ Saved</button>
-      <button class="stack-remove" data-character-id="<%= character['id'] %>">❌ Remove from Stack</button>
-    <% else %>
-      <button class="stack-add" data-character-id="<%= character['id'] %>">➕ Add to Stack</button>
-      <button class="stack-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Stack</button>
-    <% end %>
-  </div>
-<% end %>
+    <tr>
+      <td><span>Filters:</span></td>
+      <td><input class="filter" name="hanzi" value="<%= @filters['hanzi'] %>"></td>
+      <td><input class="filter" name="pinyin" value="<%= @filters['pinyin'] %>"></td>
+      <td><input class="filter" name="meaning" value="<%= @filters['meaning'] %>"></td>
+      <td></td>
+      <td><input class="filter" name="radical" value="<%= @filters['radical'] %>"></td>
+      <td></td>
+      <td><input class="filter" name="hsk2" value="<%= @filters['hsk2'] %>"></td>
+      <td><input class="filter" name="hsk3" value="<%= @filters['hsk3'] %>"></td>
+      <input type="hidden" name="filters">
+      <td><button class="filters-set" type="submit">Apply Filters</button></td>
+    </tr>
+  </thead>
+  <tbody>
+  <% @characters.each do |character| %>
+    <tr>
+      <td>
+        <% if @deck['id'] %>
+          <% flashcards = @flashcards.to_set { |card| card['character_id'] } %>
+          <% if flashcards.include?(character["id"]) %>
+            <button class="deck-add" data-character-id="<%= character['id'] %>" disabled>✅ In Deck</button>
+            <button class="deck-remove" data-character-id="<%= character['id'] %>">❌ Remove from Deck</button>
+          <% else %>
+            <button class="deck-add" data-character-id="<%= character['id'] %>">➕ Add to Deck</button>
+            <button class="deck-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Deck</button>
+          <% end %>
+        <% end %>
+      </td>
+      <th scope="row"><span><%= character["hanzi"] %></span></th>
+      <td><span><%= character["pinyin"] %></span></td>
+      <td><span><%= character["meaning"] %></span></td>
+      <td><span><%= character["frequency"] %></span></td>
+      <td><span><%= character["radical"] %></span></td>
+      <td><span><%= character["gs_num"] %></span></td>
+      <td><span><%= character["hsk2"] %></span></td>
+      <td><span><%= character["hsk3"] %></span></td>
+      <td>
+        <% if saved_in?(character["id"], @stack) %>
+        <button class="stack-add" data-character-id="<%= character['id'] %>" disabled>✅ Saved</button>
+        <button class="stack-remove" data-character-id="<%= character['id'] %>">❌ Remove from Stack</button>
+        <% else %>
+        <button class="stack-add" data-character-id="<%= character['id'] %>">➕ Add to Stack</button>
+        <button class="stack-remove hidden" data-character-id="<%= character['id'] %>" disabled>❌ Remove from Stack</button>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</form>
 <% if @is_prev_page %>
-  <form action="/search/characters?" method="get">
+  <form class="prev-page-form" action="/search/characters?" method="get">
     <input type="hidden" name="page" value="<%= params['page'] - 1 %>">
     <input type="hidden" name="deck-id" value="<%= @deck['id'] %>">
     <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
-    <button type="submit">Previous Page</button>
+    <input type="hidden" name="filters">
+    <button class="filters-set" type="submit">Previous Page</button>
   </form>
 <% end %>
 <% if @is_next_page %>
-  <form action="/search/characters?" method="get">
+  <form class="next-page-form" action="/search/characters?" method="get">
     <input type="hidden" name="page" value="<%= params['page'] + 1 %>">
     <input type="hidden" name="deck-id" value="<%= @deck['id'] %>">
     <input type="hidden" name="deck-name" value="<%= @deck['name'] %>">
-    <button type="submit">Next Page</button>
+    <input type="hidden" name="filters">
+    <button class="filters-set" type="submit">Next Page</button>
   </form>
 <% end %>
 <script src="/javascripts/characters_search.js"></script>

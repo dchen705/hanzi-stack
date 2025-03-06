@@ -1,8 +1,9 @@
+require 'json'
+
 # VIEW HELPERS
 helpers do
   def saved_in?(id, collection)
-    collection = yield(collection) if block_given?
-    !!collection[id.to_s]
+    collection.include?(id.to_s)
   end
 
   def signed_in?
@@ -32,6 +33,7 @@ end
 def normalize!(params)
   normalize_deck_id!(params)
   normalize_page_number!(params)
+  parse_filters!(params)
 end
 
 def normalize_deck_id!(params)
@@ -45,5 +47,15 @@ def normalize_page_number!(params)
     params['page'] = 1
   else
     params['page'] = page_number.to_i
+  end
+end
+
+def parse_filters!(params)
+  if params['filters'].nil? || params['filters'].empty?
+    params['filters'] = ['hanzi', 'pinyin', 'meaning', 'radical', 'hsk2', 'hsk3'].to_h do |key|
+      [key, '']
+    end
+  else
+    params['filters'] = JSON.parse(params['filters'])
   end
 end

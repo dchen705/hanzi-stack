@@ -101,4 +101,27 @@ document.addEventListener('DOMContentLoaded', function() {
       selectDeckName.value = optionDeckName;
     });
   });
+
+  // Filter Forms and Inputs
+  const filterInputs = document.querySelectorAll('.filter');
+  const allFiltersInputs = document.querySelectorAll('[name="filters"]');
+  const setFiltersButtons = document.querySelectorAll('.filters-set');
+
+  function updateFilterValues() {
+    var filters = {};
+    filterInputs.forEach(input => {
+      filters[input.name] = input.value;
+    });
+
+    var jsonFilters = JSON.stringify(filters);
+    allFiltersInputs.forEach(input => {
+      input.value = jsonFilters;
+    });
+  }
+
+  setFiltersButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      updateFilterValues();
+    });
+  });
 });

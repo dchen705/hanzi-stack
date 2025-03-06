@@ -83,15 +83,17 @@ end
 
 post '/logout' do
   logout
+  session[:message] = "You have logged out."
   redirect '/'
 end
 
 get '/search/:hanzi' do
   normalize!(params)
   @deck = @user&.deck(params['deck-id']) || {}
-  @flashcards = @user&.flashcards(@deck_id) || {}
+  @flashcards = @user&.flashcards(@deck['id']) || {}
   @decks = @user&.decks&.values || {}
-  @characters = @data.list_characters(params['page'])
+  @filters = params['filters']
+  @characters = @data.list_characters(params['page'], @filters)
   @is_next_page = @data.detect_next_page(params['page'])
   @is_prev_page = @data.detect_previous_page(params['page'])
   erb :characters
