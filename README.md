@@ -1,4 +1,4 @@
-# HSK-Flashcards
+# Hanzi Stack
 
 ## How to run
 
