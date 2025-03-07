@@ -29,25 +29,16 @@ class Database
       offset = (page_number - 1) * SEARCH_PAGE_LIMIT
       sql = search_query(offset)
       sql_filters = normalize_filters(filters)
-      query(sql, *sql_filters.values).map do |tuple|
-        { 'id' => tuple['id'],
-          'hanzi' => tuple['hanzi'],
-          'pinyin' => tuple['pinyin'],
-          'meaning' => tuple['meaning'],
-          'frequency' => tuple['frequency'],
-          'radical' => tuple['radical'],
-          'gs_num' => tuple['gs_num'],
-          'hsk2' => tuple['hsk2'],
-          'hsk3' => tuple['hsk3'], }
-      end
+      result = query(sql, *sql_filters.values)
+      parse_result(result)
     end
 
-    def detect_next_page(page_number)
-      detect_page(page_number, SEARCH_PAGE_LIMIT)
+    def detect_next_page(page_number, filters)
+      detect_page(page_number, SEARCH_PAGE_LIMIT, filters)
     end
 
-    def detect_previous_page(page_number)
-      detect_page(page_number, -SEARCH_PAGE_LIMIT)
+    def detect_previous_page(page_number, filters)
+      detect_page(page_number, -SEARCH_PAGE_LIMIT, filters)
     end
 
     # Decks
@@ -62,11 +53,13 @@ class Database
       query('SELECT id FROM users WHERE username=$1', username).values[0][0]
     end
 
-    def detect_page(page_number, offset_change)
+    def detect_page(page_number, offset_change, filters)
       offset = ((page_number - 1) * SEARCH_PAGE_LIMIT) + offset_change
       return false if offset.negative?
 
-      query("SELECT id FROM characters OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT}").ntuples >= 1
+      sql_filters = normalize_filters(filters)
+      sql = search_query(offset)
+      query(sql, *sql_filters.values).ntuples >= 1
     end
 
     def search_query(offset)
@@ -86,10 +79,26 @@ class Database
       sql_filters = filters.dup
       filters.each do |key, value|
         value = value.empty? ? '%' : value.strip
-        value = "%#{value}%" if key == 'meaning' || key == 'radical'
+        value = "%#{value}%" if %w[meaning radical].include?(key)
         sql_filters[key] = value
       end
       sql_filters
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def parse_result(result)
+      result.map do |tuple|
+        { 'id' => tuple['id'],
+          'hanzi' => tuple['hanzi'],
+          'pinyin' => tuple['pinyin'],
+          'meaning' => tuple['meaning'],
+          'frequency' => tuple['frequency'],
+          'radical' => tuple['radical'],
+          'gs_num' => tuple['gs_num'],
+          'hsk2' => tuple['hsk2'],
+          'hsk3' => tuple['hsk3'] }
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
   end
 end

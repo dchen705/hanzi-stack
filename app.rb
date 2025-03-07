@@ -83,7 +83,7 @@ end
 
 post '/logout' do
   logout
-  session[:message] = "You have logged out."
+  session[:message] = 'You have logged out.'
   redirect '/'
 end
 
@@ -94,8 +94,8 @@ get '/search/:hanzi' do
   @decks = @user&.decks&.values || {}
   @filters = params['filters']
   @characters = @data.list_characters(params['page'], @filters)
-  @is_next_page = @data.detect_next_page(params['page'])
-  @is_prev_page = @data.detect_previous_page(params['page'])
+  @is_next_page = @data.detect_next_page(params['page'], @filters)
+  @is_prev_page = @data.detect_previous_page(params['page'], @filters)
   erb :characters
 end
 

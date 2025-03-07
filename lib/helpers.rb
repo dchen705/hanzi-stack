@@ -52,7 +52,7 @@ end
 
 def parse_filters!(params)
   if params['filters'].nil? || params['filters'].empty?
-    params['filters'] = ['hanzi', 'pinyin', 'meaning', 'radical', 'hsk2', 'hsk3'].to_h do |key|
+    params['filters'] = %w[hanzi pinyin meaning radical hsk2 hsk3].to_h do |key|
       [key, '']
     end
   else

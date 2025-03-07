@@ -225,7 +225,7 @@ class RoutesTest < Minitest::Test
     assert_match next_page_button, last_response.body
   end
 
-  def test_search_char_page_1
+  def test_search_char_page_one
     # skip
     get '/search/characters'
     assert_equal 200, last_response.status
