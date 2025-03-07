@@ -63,16 +63,14 @@ class Database
     end
 
     def search_query(offset)
-      <<~SQL
-        SELECT * FROM characters
-        WHERE hanzi LIKE $1
-        AND pinyin LIKE $2
-        AND meaning LIKE $3
-        AND radical LIKE $4
-        AND hsk2 LIKE $5
-        AND hsk3 LIKE $6
-        OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT};
-      SQL
+      'SELECT * FROM characters ' \
+      'WHERE hanzi LIKE $1 ' \
+      'AND pinyin LIKE $2 ' \
+      'AND meaning LIKE $3 ' \
+      'AND radical LIKE $4 ' \
+      'AND hsk2 LIKE $5 ' \
+      'AND hsk3 LIKE $6 ' \
+      "OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT};"
     end
 
     def normalize_filters(filters)

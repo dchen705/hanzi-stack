@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }).then (response => {
         button.textContent = '✅ Saved';
         button.disabled = true;
-        var removeButton = document.querySelector(`.stack-remove[data-character-id='${characterId}'`)
+        var removeButton = document.querySelector(`.stack-remove[data-character-id='${characterId}']`)
         removeButton.classList.remove('hidden');
         removeButton.disabled = false;
       });
