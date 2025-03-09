@@ -55,28 +55,6 @@
         </div>
       </div>
     </nav>
-    <!-- <% if session[:message] %>
-       <p><%= session.delete(:message) %></p>
-    <% end %>
-    <% if signed_in? %>
-      <p>Signed in as: <%= session[:username] %></p>
-      <form action="/logout" method="post">
-        <button class="logout" type="submit">⬇️ Log out</button>
-      </form>
-    <% end %>
-    <h1>Hanzi Stack</h1>
-    <p>This is an app for looking up and learning Chinese characters.</p>
-    <nav>
-      <ul>
-        <li><a href="/">🏠 Home</a></li>
-        <li><a href="/stack">📚 Your Stack</a></li>
-        <li><a href="/decks">🎴 View Decks</a></li>
-        <% unless signed_in? %>
-          <li><a href="/register">📝 Register</a></li>
-          <li><a href="/login"> ⬆️ Login</a></li>
-        <% end %>
-      </ul>
-     </nav> -->
   </header>
   <main>
     <%== yield %>

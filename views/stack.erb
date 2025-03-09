@@ -1,4 +1,13 @@
 <a href="/flashcards/stack">Flashcard Mode</a>
-<% @stack.each do |item| %>
-  <p><%= item %></p>
-<% end %>
+<div class="container-stackcards">
+  <% @stack.each do |card| %>
+    <div class="stackcard card bg-secondary">
+      <div class="stackcard-content">
+        <h2><%= card[1]['hanzi'] %></h2>
+        <h4><%= card[1]['pinyin'] %></h4>
+        <p><%= card[1]['meaning'] %></p>
+      </div>
+
+    </div>
+  <% end %>
+</div>

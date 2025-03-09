@@ -104,11 +104,14 @@ get '/stack' do
 end
 
 post '/stack' do
-  @stack[params[:id]] = true
+  character = @data.character(params[:id])
+  @stack[params[:id]] = character
+  status 200
 end
 
 post '/stack/remove' do
   @stack.delete(params[:id])
+  status 200
 end
 
 get '/decks' do

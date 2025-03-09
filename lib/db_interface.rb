@@ -33,6 +33,11 @@ class Database
       parse_result(result)
     end
 
+    def character(id)
+      result = query('SELECT * FROM characters WHERE id = $1', id)
+      parse_result(result).first
+    end
+
     def detect_next_page(page_number, filters)
       detect_page(page_number, SEARCH_PAGE_LIMIT, filters)
     end
