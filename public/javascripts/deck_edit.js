@@ -1,8 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const removeButton = document.querySelector('.deck-remove button');
+  const removeLink = document.querySelector('.deck-remove-link');
+  const renameLink = document.querySelector('.deck-rename-link');
+  const renameDialog = document.querySelector('dialog.rename-deck');
+  const renameCancel = document.querySelector('button.rename-deck-cancel');
 
-  removeButton.addEventListener('click', function(event) {
+  removeLink.addEventListener('click', function(event) {
     event.preventDefault();
+    event.stopPropagation();
 
     const userConfirmed = confirm('Are you sure you want to delete this deck?');
 
@@ -12,11 +16,22 @@ document.addEventListener('DOMContentLoaded', function() {
       confirmInput.name = 'confirm';
       confirmInput.value = 'true';
 
-      const form = removeButton.closest('form');
+      const form = document.querySelector('form.deck-remove');
 
       form.appendChild(confirmInput);
 
       form.submit();
     }
   })
+
+  renameLink.addEventListener('click', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    renameDialog.showModal();
+  });
+
+  renameCancel.addEventListener('click', function() {
+    renameDialog.close();
+  });
 });

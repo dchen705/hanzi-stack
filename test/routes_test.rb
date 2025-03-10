@@ -161,7 +161,7 @@ class RoutesTest < Minitest::Test
   def test_deck_edit_link
     # skip
     get '/deck/edit', { 'deck-id' => '1' }, admin_session
-    assert_includes last_response.body, 'Editing AdminsFirstDeck'
+    assert_includes last_response.body, 'AdminsFirstDeck'
   end
 
   def test_deck_not_found
@@ -176,6 +176,13 @@ class RoutesTest < Minitest::Test
     get 'deck/edit', { 'deck-id' => '1' }, { 'rack.session' => { username: 'alt' } }
     assert_equal 'Deck not found.', session[:message]
     assert_equal 302, last_response.status
+  end
+
+  def test_deck_rename
+    # skip
+    post '/deck/rename', { 'deck-id' => '1', 'new-name' => 'AdminsRenamedDeck'}, admin_session
+    get '/decks', {}, admin_session
+    assert_includes last_response.body, 'AdminsRenamedDeck'
   end
 
   def test_deck_remove_success

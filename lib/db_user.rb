@@ -39,6 +39,10 @@ class Database
             'VALUES ($1, $2)', deck_name, @user_id)
     end
 
+    def rename_deck!(id, new_name)
+      query('UPDATE decks SET name=$1 WHERE id=$2', new_name, id)
+    end
+
     def remove_deck!(id)
       query('DELETE FROM decks WHERE id=$1', id)
     end

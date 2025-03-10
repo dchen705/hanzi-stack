@@ -11,10 +11,10 @@
 </form>
 
 <dialog>
-  <form action="/deck/new" method="post">
+  <form class="new-deck" action="/deck/new" method="post">
     <div>
       <label for="deck-name">Deck Name:</label>
-      <input name="deck-name" id="deck-name" required>
+      <input name="deck-name" id="deck-name" maxlength="26" required>
     </div>
     <button type="submit">Add Deck</button>
     <button class="deck-add-cancel">Cancel</button>

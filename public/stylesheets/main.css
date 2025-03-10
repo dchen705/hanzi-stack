@@ -4,6 +4,17 @@
   display: none;
 }
 
+.btn {
+  border-radius: 5px;
+  font-size: 1.25rem;
+}
+
+.add-character button {
+  font-size: 1.25rem;
+  padding: 1rem 1.5rem;
+  margin-top: 2.5rem;
+}
+
 .alert {
   position: fixed;
   padding: .25rem 5rem;
@@ -32,6 +43,7 @@ main {
   width: 100vw;
   height: 80vh;
   text-align: center;
+  padding-top: 5vh;
 }
 
 .search-btn {
@@ -40,7 +52,7 @@ main {
   margin-top: 20vh;
 }
 
-.container-stackcards {
+.container-flashcards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px,.5fr));
   gap: 1.5rem;
@@ -49,12 +61,12 @@ main {
   margin-top: 2rem;
 }
 
-.stackcard {
+.flashcard {
   outline: 1px solid black;
   aspect-ratio: 3/2.5;
 }
 
-.stackcard-content {
+.flashcard-content {
   font-size: .8rem;
   max-height: 100%;
   overflow-y: auto;
@@ -62,11 +74,11 @@ main {
 }
 
 @media (min-width: 576px) {
-  .container-stackcards {
+  .container-flashcards {
     grid-template-columns: repeat(auto-fit, minmax(250px,.5fr));
   }
 
-  .stackcard-content {
+  .flashcard-content {
     font-size: 1rem;
   }
 }

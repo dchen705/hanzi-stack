@@ -2,7 +2,7 @@
   <h3>Adding to <a class="edit-link" data-deck-id = "<%= @deck['id'] %>" href="/deck/edit?deck-id=<%= @deck['id'] %>"><%= @deck['name'] %></a></h3>
 <% end %>
 <form action="/search/characters?" method="get">
-  <label>Editing:</label>
+  <label>Switch to:</label>
   <select>
   <option selected disabled>----Select Deck----</option>
     <% @decks.each do |deck| %>

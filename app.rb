@@ -153,6 +153,15 @@ post '/deck/edit/remove' do
   @user&.remove_card!(deck_id, flashcard_id)
 end
 
+post '/deck/rename' do
+  id = params['deck-id']
+  new_name = params['new-name']
+  old_name = @user&.deck(id)['name']
+  @user.rename_deck!(id, new_name)
+  session[:message] = "Deck: #{old_name} has been renamed to #{new_name}."
+  redirect "/deck/edit?deck-id=#{id}"
+end
+
 post '/deck/remove' do
   id = params['deck-id']
   @deck = @user&.deck(id)
