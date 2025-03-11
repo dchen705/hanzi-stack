@@ -1,23 +1,27 @@
-<button class="deck-add" type="submit">New Deck</button>
-<p>Decks:</p>
-<form action="/deck/edit" action="get">
+<form action="/deck/edit" method="get">
+  <button class="deck-edit btn btn-info mb-3" type="submit">Edit Deck</button>
+  <button class="deck-add btn btn-success mb-3" type="submit">New Deck</button>
+  <ul class="list-group">
   <% @decks.each do |id, deck| %>
-    <div>
-      <label for="<%= id %>"><%= deck %></label>
-      <input type="radio" name="deck-id" id="<%= id %>" value="<%= id %>" required>
-    </div>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <input type="radio" name="deck-id" id="<%= id %>" value="<%= id %>" required>
+        <label for="<%= id %>"><%= deck["name"] %></label>
+      </div>
+      <span class="badge bg-primary rounded-pill"><%= format_date(deck['created_on']) %></span>
+    </li>
   <% end %>
-  <button type="submit">Edit Deck</button>
+  </ul>
 </form>
 
 <dialog>
   <form class="new-deck" action="/deck/new" method="post">
     <div>
-      <label for="deck-name">Deck Name:</label>
-      <input name="deck-name" id="deck-name" maxlength="26" required>
+      <label class="form-label mt-4" for="deck-name">Deck Name:</label>
+      <input class="form-control mb-3" name="deck-name" id="deck-name" maxlength="26" required>
     </div>
-    <button type="submit">Add Deck</button>
-    <button class="deck-add-cancel">Cancel</button>
+    <button class="btn btn-secondary btn-sm" type="submit">Add Deck</button>
+    <button class="deck-add-cancel btn btn-secondary btn-sm">Cancel</button>
   </form>
 </dialog>
 <script src="/javascripts/decks_view.js"></script>

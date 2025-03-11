@@ -1,13 +1,13 @@
-<p>Register Form</p>
-<form action="/register" method="post">
-  <div>
-    <label for="username">Username: </label>
-    <input name="username" id="username" value="<%= params[:username]%>">
+<h2>Register</h2>
+<form action="/register" method="post" class="d-flex flex-column align-items-center">
+  <div class="col-md-3">
+    <label for="username" class="form-label mt-4">Username: </label>
+    <input class="form-control" name="username" id="username" value="<%= params[:username]%>">
   </div>
-  <div>
-    <label for="password">Password: </label>
-    <input type="password" name="password" id="password">
+  <div class="col-md-3">
+    <label for="password" class="form-label mt-4">Password: </label>
+    <input type="password" name="password" id="password" class="form-control">
   </div>
-  <button type="submit">Sign up</button>
+  <button type="submit" class="btn btn-primary mt-4 mb-3">Sign up</button>
 </form>
 <p>Already have an account? <a href='/login'>Login</a></p>

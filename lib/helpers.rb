@@ -27,6 +27,10 @@ helpers do
       previous_url =~ bad_url
     end
   end
+
+  def format_date(timestamp)
+    "#{timestamp[5..9]}-#{timestamp[0..3]}"
+  end
 end
 
 # ROUTE HELPERS
