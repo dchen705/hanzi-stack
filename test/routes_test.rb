@@ -205,6 +205,8 @@ class RoutesTest < Minitest::Test
     assert_nil session[:message]
   end
 
+  # def test_deck_memo
+
   def test_add_card
     # skip
     post '/deck/edit/add', { 'deck-id' => '1', 'character-id' => '1' }, admin_session

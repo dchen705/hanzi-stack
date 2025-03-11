@@ -47,6 +47,10 @@ class Database
       query('DELETE FROM decks WHERE id=$1', id)
     end
 
+    def update_memo!(deck_id, memo)
+      query('UPDATE decks SET memo=$1 WHERE id=$2', memo, deck_id)
+    end
+
     def flashcards(deck_id)
       query('SELECT * FROM flashcards ' \
             'JOIN decks_flashcards ' \

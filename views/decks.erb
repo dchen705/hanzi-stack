@@ -7,8 +7,14 @@
       <div>
         <input type="radio" name="deck-id" id="<%= id %>" value="<%= id %>" required>
         <label for="<%= id %>"><%= deck["name"] %></label>
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
       </div>
-      <span class="badge bg-primary rounded-pill"><%= format_date(deck['created_on']) %></span>
+      <div>
+        <span class="badge bg-warning rounded-pill"><%=  deck['memo'] %></span>
+        <span class="badge bg-primary rounded-pill"><%= "created: #{format_date(deck['created_on'])}" %></span>
+      </div>
     </li>
   <% end %>
   </ul>

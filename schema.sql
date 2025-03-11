@@ -33,7 +33,8 @@ CREATE TABLE decks (
   user_id integer NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity integer NOT NULL DEFAULT 0,
-  favorited boolean NOT NULL DEFAULT false
+  favorited boolean NOT NULL DEFAULT false,
+  memo varchar(100)
 );
 
 CREATE TABLE decks_flashcards (

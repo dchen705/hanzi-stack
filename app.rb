@@ -172,6 +172,13 @@ post '/deck/remove' do
   redirect '/decks'
 end
 
+post '/deck/memo' do
+  deck_id = params['deck-id']
+  memo = params['memo'].strip
+  @user&.update_memo!(deck_id, memo) if memo.length > 0
+  redirect "/deck/edit?deck-id=#{deck_id}"
+end
+
 get 'flashcards/:id' do
   @flashcards = @stack if params[:id] == 'stack'
   erb :flashcards

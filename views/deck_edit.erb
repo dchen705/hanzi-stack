@@ -1,3 +1,9 @@
+<form class="memo-form" action="/deck/memo" method="post">
+  <input type="hidden" name="deck-id" value="<%= @deck_id %>">
+  <textarea name="memo" maxlength="100"><%= @deck['memo'] %></textarea>
+  <button class="btn btn-info btn-sm" type="submit">Update Memo</button>
+</form>
+
 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
   <button type="button" class="btn btn-primary"><%= @deck["name"] %></button>
   <div class="btn-group" role="group">
