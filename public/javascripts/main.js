@@ -27,10 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
       event.stopPropagation();
     });
 
-  logoutLink.addEventListener('click', function(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  if (logoutLink == null) {
+    return;
+  } else {
+    logoutLink.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
 
-    logoutForm.submit();
-  });
+      logoutForm.submit();
+    });
+  }
 })

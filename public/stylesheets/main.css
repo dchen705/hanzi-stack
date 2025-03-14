@@ -1,4 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url("https://fonts.googleapis.com/css?family=Neucha|Patrick+Hand+SC&display=swap");
 
 .hidden {
   display: none;
@@ -133,4 +134,137 @@ main {
 .prev-page-form,
 .next-page-form {
   display: inline-block;
+}
+
+.main-body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10vh;
+  padding-bottom: 100px;
+}
+
+.cardface-container {
+  width: 450px;
+  height: 300px;
+  transition: transform .5s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  margin: 2rem 0;
+}
+
+.cardface {
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backface-visibility: hidden;
+  border: 3px solid black;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 24px;
+  font-weight: bold
+}
+
+.cardface-content {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.cardface-content .hanzi {
+  font-size: 3.25rem;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.controls-container {
+  width: 450px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 50px;
+}
+
+.paper-btn {
+  font-family: "Neucha", sans-serif;
+  font-size: 1rem;
+  background-color: #fff;
+  border: 2px solid #41403e;
+  padding: .75rem 1.5rem;
+  cursor: pointer;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 255px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 255px;
+  box-shadow: 15px 28px 25px -18px rgba(0,0,0,.2);
+  transition: all 35ms ease-out 0s;
+}
+
+.paper-btn:hover {
+  color: #0b74d5;
+  border-color: #0b74d5;
+}
+
+.paper-btn:active {
+  transform: translateY(3px);
+  box-shadow: 2px 8px 8px -5px rgba(0, 0, 0, 0.3);
+}
+
+.instructions-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.instructions {
+  display: flex;
+  justify-content: center;
+  font-family: "Neucha", sans-serif;
+  font-size: 1.5rem;
+}
+
+.tabs {
+  width: 100%;
+}
+
+.tabs input {
+  display: none;
+}
+
+.tabs label {
+  color: #cdcccb;
+  margin: .75rem 2.25rem;
+}
+
+.tabs label:hover {
+  color: #41403e;
+  cursor: pointer;
+}
+
+.tabs input:checked + label {
+  color: #41403e;
+  border-bottom: 3px solid #0b74d5;
+}
+
+.cardface:has(input.tab1:checked) {
+  background-color: rgb(240, 65, 36);
+}
+
+.cardface:has(input.tab2:checked) {
+  background-color: rgb(233, 144, 2);
+}
+
+.cardface:has(input.tab3:checked) {
+  background-color: rgb(105, 189, 136);
 }

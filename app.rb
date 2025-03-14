@@ -179,7 +179,12 @@ post '/deck/memo' do
   redirect "/deck/edit?deck-id=#{deck_id}"
 end
 
-get 'flashcards/:id' do
-  @flashcards = @stack if params[:id] == 'stack'
+get '/flashcards/:name' do
+  @flashcards = @stack if params[:name] == 'stack'
+  @flashcards = @flashcards.values.map do |card|
+    { 'hanzi' => card['hanzi'],
+      'pinyin' => card['pinyin'],
+      'meaning' => card['meaning'] }
+  end
   erb :flashcards
 end

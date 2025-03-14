@@ -1,3 +1,59 @@
-<% @flashcards.each do |card| %>
-  <p><%= card %></p>
-<% end %>
+<style>
+
+</style>
+<div class="instructions-container">
+  <div class="instructions">
+    <p>W to flip card.</p>
+    <p>Q to shuffle deck.</p>
+  </div>
+</div>
+
+<div class="main-body">
+  <div class="controls-container">
+    <button class="paper-btn prev" disabled style="opacity:0;"><--</button>
+    <button class="paper-btn next">--></button>
+  </div>
+  <div class="cardface-container">
+    <div class="cardface front">
+      <div class="cardface-content">
+      <p class="hanzi"></p>
+      </div>
+      <div class="tabs">
+        <input class="tab1" id="tab1-front" type="radio" name="tabs-front">
+        <label for="tab1-front">Not Yet</label>
+
+        <input class="tab2" id="tab2-front" type="radio" name="tabs-front">
+        <label for="tab2-front">Hard</label>
+
+        <input class="tab3" id="tab3-front" type="radio" name="tabs-front">
+        <label for="tab3-front">Good</label>
+      </div>
+    </div>
+    <div class="cardface back">
+      <div class="cardface-content">
+        <p class="pinyin"></p>
+        <p class="meaning"></p>
+      </div>
+      <div class="tabs">
+        <input class="tab1" id="tab1-back" type="radio" name="tabs-back">
+        <label for="tab1-back">Not Yet</label>
+
+        <input class="tab2" id="tab2-back" type="radio" name="tabs-back">
+        <label for="tab2-back">Hard</label>
+
+        <input class="tab3" id="tab3-back" type="radio" name="tabs-back">
+        <label for="tab3-back">Good</label>
+      </div>
+    </div>
+  </div>
+  <div class="instructions-container">
+  <div class="instructions">
+    <p>1, 2, or 3 to change proficiency.</p>
+  </div>
+</div>
+</div>
+
+<script>
+  const flashcards = <%== @flashcards.to_json %>;
+</script>
+<script src="/javascripts/flashcards.js"></script>
