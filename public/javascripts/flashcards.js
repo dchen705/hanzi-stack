@@ -30,7 +30,9 @@ function updateCard() {
   hanzi.textContent = currentCard.hanzi;
   pinyin.textContent = currentCard.pinyin;
   meaning.textContent = currentCard.meaning;
-  selectBothSidesTab(`.tab${currentSavedProficiency()}`);
+  if (currentSavedProficiency() != null ) {
+    selectBothSidesTab(`.tab${currentSavedProficiency()}`);
+  }
 }
 
 function resetCardFace() {
@@ -85,6 +87,15 @@ function updateProficiency() {
   }
 }
 
+function swipeCardInView() {
+  setTimeout(() => {
+    cardContainer.style.transition = 'none';
+    cardContainer.classList.remove('swiped-left');
+    cardContainer.classList.remove('swiped-right');
+    cardContainer.style.transition = 'transform .25s';
+  }, 25);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   disableButton(prevButton);
   updateCard();
@@ -112,9 +123,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (currentSavedProficiency() != null ) {
       updateProficiency();
     }
+    cardContainer.classList.add('swiped-left');
     currentIndex -= 1;
     resetCardFace();
     updateCard();
+    swipeCardInView();
     enableButton(nextButton);
     if (firstCard()) { disableButton(prevButton); };
   });
@@ -123,9 +136,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (currentSavedProficiency() != null ) {
       updateProficiency();
     }
+    cardContainer.classList.add('swiped-right');
     currentIndex += 1;
     resetCardFace();
     updateCard();
+    swipeCardInView();
     enableButton(prevButton);
     if (lastCard()) { disableButton(nextButton); };
   });

@@ -171,6 +171,8 @@ main {
   transform-style: preserve-3d;
   cursor: pointer;
   margin: 2rem 0;
+  transform: translateX(0);
+  opacity: 1;
 }
 
 .cardface {
@@ -204,6 +206,16 @@ main {
 
 .flipped {
   transform: rotateY(180deg);
+}
+
+.swiped-left {
+  opacity: 0;
+  transform: translateX(-200vw);
+}
+
+.swiped-right {
+  opacity: 0;
+  transform: translateX(200vw);
 }
 
 .controls-container {
