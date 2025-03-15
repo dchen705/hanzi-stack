@@ -63,3 +63,13 @@ def parse_filters!(params)
     params['filters'] = JSON.parse(params['filters'])
   end
 end
+
+def convert_proficiency(value)
+  case value
+  when 'not yet' then '1'
+  when 'hard' then '2'
+  when 'good' then '3'
+  else
+    ['not yet', 'hard', 'good'][value.to_i - 1]
+  end
+end

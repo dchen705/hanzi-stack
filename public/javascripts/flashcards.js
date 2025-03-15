@@ -16,8 +16,10 @@ const meaning = document.querySelector('.meaning');
 const cardContainer = document.querySelector('.cardface-container');
 const prevButton = document.querySelector('button.prev');
 const nextButton = document.querySelector('button.next');
+const tabContainers = document.querySelectorAll('.tabs');
+const tabs = document.querySelectorAll('.tabs input');
 
-function selectTabs(tabclass) {
+function selectBothSidesTab(tabclass) {
   document.querySelectorAll(tabclass).forEach(tab => {
     tab.checked = true;
   })
@@ -28,6 +30,7 @@ function updateCard() {
   hanzi.textContent = currentCard.hanzi;
   pinyin.textContent = currentCard.pinyin;
   meaning.textContent = currentCard.meaning;
+  selectBothSidesTab(`.tab${currentSavedProficiency()}`);
 }
 
 function resetCardFace() {
@@ -58,10 +61,31 @@ function lastCard() {
   return currentIndex >= flashcards.length - 1;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  const tabContainers = document.querySelectorAll('.tabs');
-  const tabs = document.querySelectorAll('.tabs input');
+function currentSavedProficiency() {
+  return flashcards[currentIndex].proficiency;
+}
 
+function newSelectedProficiency() {
+  return document.querySelector('.tabs input:checked').className.slice(-1);
+}
+
+function updateProficiency() {
+  let currentCard = flashcards[currentIndex];
+  let newProficiency = newSelectedProficiency();
+  if (currentSavedProficiency() != newProficiency) {
+    fetch('/flashcards/proficiency/edit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/x-www-form-urlencoded"
+      },
+      body: 'id=' + flashcards[currentIndex].id + '&proficiency=' + newProficiency
+    }).then(response => {
+        currentCard.proficiency = newProficiency;
+    })
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
   disableButton(prevButton);
   updateCard();
   if (lastCard()) {
@@ -80,11 +104,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   tabs.forEach(tab => {
     tab.addEventListener('change', function() {
-      selectTabs(`.${this.className}`)
+      selectBothSidesTab(`.${this.className}`)
     });
   });
 
   prevButton.addEventListener('click', function() {
+    if (currentSavedProficiency() != null ) {
+      updateProficiency();
+    }
     currentIndex -= 1;
     resetCardFace();
     updateCard();
@@ -93,6 +120,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   nextButton.addEventListener('click', function() {
+    if (currentSavedProficiency() != null ) {
+      updateProficiency();
+    }
     currentIndex += 1;
     resetCardFace();
     updateCard();
@@ -114,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
       case '1':
       case '2':
       case '3':
-        selectTabs(`.tab${e.key}`);
+        selectBothSidesTab(`.tab${e.key}`);
         break;
     }
   });

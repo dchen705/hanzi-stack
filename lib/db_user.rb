@@ -88,6 +88,11 @@ class Database
       result.ntuples < 1 ? nil : result.values[0][0]
     end
 
+    def update_proficiency!(flashcard_id, proficiency)
+      query('UPDATE flashcards SET user_proficiency=$1 WHERE id=$2 AND user_id=$3;',
+            proficiency, flashcard_id, @user_id)
+    end
+
     def to_s
       @username
     end

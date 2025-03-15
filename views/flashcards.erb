@@ -16,38 +16,44 @@
       <div class="cardface-content">
       <p class="hanzi"></p>
       </div>
-      <div class="tabs">
-        <input class="tab1" id="tab1-front" type="radio" name="tabs-front">
-        <label for="tab1-front">Not Yet</label>
+      <% unless @no_proficiency_saved %>
+        <div class="tabs">
+          <input class="tab1" id="tab1-front" type="radio" name="tabs-front">
+          <label for="tab1-front">Not Yet</label>
 
-        <input class="tab2" id="tab2-front" type="radio" name="tabs-front">
-        <label for="tab2-front">Hard</label>
+          <input class="tab2" id="tab2-front" type="radio" name="tabs-front">
+          <label for="tab2-front">Hard</label>
 
-        <input class="tab3" id="tab3-front" type="radio" name="tabs-front">
-        <label for="tab3-front">Good</label>
-      </div>
+          <input class="tab3" id="tab3-front" type="radio" name="tabs-front">
+          <label for="tab3-front">Good</label>
+        </div>
+      <% end %>
     </div>
     <div class="cardface back">
       <div class="cardface-content">
         <p class="pinyin"></p>
         <p class="meaning"></p>
       </div>
-      <div class="tabs">
-        <input class="tab1" id="tab1-back" type="radio" name="tabs-back">
-        <label for="tab1-back">Not Yet</label>
+      <% unless @no_proficiency_saved %>
+        <div class="tabs">
+          <input class="tab1" id="tab1-back" type="radio" name="tabs-back">
+          <label for="tab1-back">Not Yet</label>
 
-        <input class="tab2" id="tab2-back" type="radio" name="tabs-back">
-        <label for="tab2-back">Hard</label>
+          <input class="tab2" id="tab2-back" type="radio" name="tabs-back">
+          <label for="tab2-back">Hard</label>
 
-        <input class="tab3" id="tab3-back" type="radio" name="tabs-back">
-        <label for="tab3-back">Good</label>
-      </div>
+          <input class="tab3" id="tab3-back" type="radio" name="tabs-back">
+          <label for="tab3-back">Good</label>
+        </div>
+      <% end %>
     </div>
   </div>
-  <div class="instructions-container">
-  <div class="instructions">
-    <p>1, 2, or 3 to change proficiency.</p>
-  </div>
+  <% unless @no_proficiency_saved %>
+    <div class="instructions-container">
+    <div class="instructions">
+      <p>1, 2, or 3 to change proficiency.</p>
+    </div>
+  <% end %>
 </div>
 </div>
 

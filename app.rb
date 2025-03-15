@@ -185,6 +185,7 @@ get '/flashcards/stack' do
       'pinyin' => card['pinyin'],
       'meaning' => card['meaning'] }
   end
+  @no_proficiency_saved = true
   erb :flashcards
 end
 
@@ -192,9 +193,17 @@ get '/flashcards/:id' do
   deck_id = params[:id]
   @flashcards = @user&.flashcards(deck_id) || []
   @flashcards = @flashcards.map do |tuple|
-    { 'hanzi' => tuple['hanzi'],
+    { 'id' => tuple['flashcard_id'],
+      'hanzi' => tuple['hanzi'],
       'pinyin' => tuple['pinyin'],
-      'meaning' => tuple['meaning'] }
+      'meaning' => tuple['meaning'],
+      'proficiency' => convert_proficiency(tuple['user_proficiency']) }
   end
   erb :flashcards
+end
+
+post '/flashcards/proficiency/edit' do
+  flashcard_id = params[:id]
+  proficiency = convert_proficiency(params[:proficiency])
+  @user&.update_proficiency!(flashcard_id, proficiency)
 end
