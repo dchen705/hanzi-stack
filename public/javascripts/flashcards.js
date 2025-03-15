@@ -41,11 +41,13 @@ function resetCardFace() {
 function disableButton(button) {
   button.style.opacity = 0;
   button.disabled = true;
+  button.style.cursor = 'default';
 };
 
 function enableButton(button) {
   button.style.opacity = 1;
   button.disabled = false;
+  button.style.cursor = 'pointer';
 }
 
 function firstCard() {
@@ -60,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const tabContainers = document.querySelectorAll('.tabs');
   const tabs = document.querySelectorAll('.tabs input');
 
+  disableButton(prevButton);
   updateCard();
   if (lastCard()) {
     disableButton(nextButton);

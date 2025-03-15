@@ -1,4 +1,5 @@
-<a href="/flashcards/stack">Flashcard Mode</a>
+<% unless @stack.empty? %>
+<a class="tab" href="/flashcards/stack">Review Flashcards</a>
 <div class="container-flashcards">
   <% @stack.each do |card| %>
     <div class="flashcard card bg-secondary">
@@ -7,7 +8,9 @@
         <h4><%= card[1]['pinyin'] %></h4>
         <p><%= card[1]['meaning'] %></p>
       </div>
-
     </div>
   <% end %>
 </div>
+<% else %>
+  <p class=".text-body-secondary">Currently no cards in your stack. Search <a href="/search/characters">here</a>.</p>
+<% end %>

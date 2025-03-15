@@ -57,7 +57,7 @@ class Database
               'ON flashcards.id = flashcard_id ' \
             'JOIN characters ' \
               'ON characters.id = character_id ' \
-            'WHERE deck_id=$1', deck_id)
+            'WHERE deck_id=$1 AND user_id=$2', deck_id, @user_id)
     end
 
     def create_card!(character_id)

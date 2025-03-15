@@ -1,6 +1,7 @@
-<form action="/deck/edit" method="get">
+<form class="deck-form" action="/deck/edit" method="get">
+  <button class="deck-review btn btn-warning mb-3" type="submit">Review Deck</button>
   <button class="deck-edit btn btn-info mb-3" type="submit">Edit Deck</button>
-  <button class="deck-add btn btn-success mb-3" type="submit">New Deck</button>
+  <button class="deck-add btn btn-success mb-3" type="button">New Deck</button>
   <ul class="list-group">
   <% @decks.each do |id, deck| %>
     <li class="list-group-item d-flex justify-content-between align-items-center">

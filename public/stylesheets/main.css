@@ -5,6 +5,21 @@
   display: none;
 }
 
+a.tab {
+  font-size: 1.5rem;
+  color: #41403e;
+  border: 2px solid #41403e;
+  border-radius: 8px;
+  text-decoration: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+a.tab:hover {
+  color: #0b74d5;
+  border: 3px solid #0b74d5;
+}
+
 .btn {
   border-radius: 5px;
   font-size: 1.25rem;
@@ -139,6 +154,7 @@ main {
 .main-body {
   width: 100%;
   height: 100vh;
+  min-height: 750px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -191,10 +207,26 @@ main {
 }
 
 .controls-container {
+  font-family: "Neucha", sans-serif;
+  font-size: 1.5rem;
+  position: relative;
   width: 450px;
   display: flex;
   justify-content: space-between;
   padding: 0 50px;
+  margin-top: 20px;
+}
+
+.controls-container p.left {
+  position: absolute;
+  top: -30px;
+  left: 0px;
+}
+
+.controls-container p.right {
+  position: absolute;
+  top: -30px;
+  left: 300px;
 }
 
 .paper-btn {
