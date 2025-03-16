@@ -180,6 +180,7 @@ post '/deck/memo' do
 end
 
 get '/flashcards/stack' do
+  @previous_url = env['HTTP_REFERER']
   @flashcards = @stack.values.map do |card|
     { 'hanzi' => card['hanzi'],
       'pinyin' => card['pinyin'],
@@ -190,6 +191,7 @@ get '/flashcards/stack' do
 end
 
 get '/flashcards/:id' do
+  @previous_url = env['HTTP_REFERER']
   deck_id = params[:id]
   @flashcards = @user&.flashcards(deck_id) || []
   @flashcards = @flashcards.map do |tuple|

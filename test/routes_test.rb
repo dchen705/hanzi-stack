@@ -180,7 +180,7 @@ class RoutesTest < Minitest::Test
 
   def test_deck_rename
     # skip
-    post '/deck/rename', { 'deck-id' => '1', 'new-name' => 'AdminsRenamedDeck'}, admin_session
+    post '/deck/rename', { 'deck-id' => '1', 'new-name' => 'AdminsRenamedDeck' }, admin_session
     get '/decks', {}, admin_session
     assert_includes last_response.body, 'AdminsRenamedDeck'
   end
@@ -255,3 +255,4 @@ class RoutesTest < Minitest::Test
   #   # refute page has deck info
   # end
 end
+# rubocop: enable Metrics/ClassLength

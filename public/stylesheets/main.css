@@ -267,7 +267,7 @@ main {
 }
 
 .instructions-container {
-  width: 100%;
+  width: 450px;
   margin: 0 auto;
 }
 
@@ -276,6 +276,20 @@ main {
   justify-content: center;
   font-family: "Neucha", sans-serif;
   font-size: 1.5rem;
+}
+
+.instructions p.w-key {
+  position: relative;
+  left: 65px;
+}
+
+.quit-link {
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: #41403e;
+  position: relative;
+  right: 200px;
+  bottom: 50px;
 }
 
 .tabs {

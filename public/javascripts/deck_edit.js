@@ -1,8 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
+  const reviewLink = document.querySelector('.deck-review-link');
+  const deckId = reviewLink.getAttribute('data-deck-id');
   const removeLink = document.querySelector('.deck-remove-link');
   const renameLink = document.querySelector('.deck-rename-link');
   const renameDialog = document.querySelector('dialog.rename-deck');
   const renameCancel = document.querySelector('button.rename-deck-cancel');
+
+  reviewLink.addEventListener('click', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    window.location.href = `/flashcards/${deckId}`;
+  })
 
   removeLink.addEventListener('click', function(event) {
     event.preventDefault();

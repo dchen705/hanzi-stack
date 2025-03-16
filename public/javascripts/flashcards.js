@@ -14,6 +14,7 @@ const hanzi = document.querySelector('.hanzi');
 const pinyin = document.querySelector('.pinyin');
 const meaning = document.querySelector('.meaning');
 const cardContainer = document.querySelector('.cardface-container');
+const quitLink = document.querySelector('.quit-link');
 const prevButton = document.querySelector('button.prev');
 const nextButton = document.querySelector('button.next');
 const tabContainers = document.querySelectorAll('.tabs');
@@ -72,6 +73,9 @@ function newSelectedProficiency() {
 }
 
 function updateProficiency() {
+  if (currentSavedProficiency() == null ) {
+    return;
+  }
   let currentCard = flashcards[currentIndex];
   let newProficiency = newSelectedProficiency();
   if (currentSavedProficiency() != newProficiency) {
@@ -120,9 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   prevButton.addEventListener('click', function() {
-    if (currentSavedProficiency() != null ) {
-      updateProficiency();
-    }
+    updateProficiency();
     cardContainer.classList.add('swiped-left');
     currentIndex -= 1;
     resetCardFace();
@@ -133,9 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   nextButton.addEventListener('click', function() {
-    if (currentSavedProficiency() != null ) {
-      updateProficiency();
-    }
+    updateProficiency();
     cardContainer.classList.add('swiped-right');
     currentIndex += 1;
     resetCardFace();
@@ -145,8 +145,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (lastCard()) { disableButton(nextButton); };
   });
 
+  quitLink.addEventListener('click', function(event) {
+    event.preventDefault();
+
+    updateProficiency()
+    setTimeout(() => {
+      window.location.href = quitLink.href;
+    }, 50)
+  });
+
   window.addEventListener('keydown', function(e) {
     switch (e.key) {
+      case 'q':
+        quitLink.click();
+        break;
       case 'w':
         cardContainer.classList.toggle('flipped');
         break;

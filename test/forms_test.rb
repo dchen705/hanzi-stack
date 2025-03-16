@@ -6,3 +6,4 @@
   # select dropdown
 
 # filters on search
+# rubocop:enable Layout/CommentIndentation
