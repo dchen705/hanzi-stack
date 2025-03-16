@@ -312,3 +312,11 @@ main {
 .cardface:has(input.tab3:checked) {
   background-color: rgb(105, 189, 136);
 }
+
+.progress {
+  width: 250px;
+}
+
+.list-group-item div {
+  text-align: left;
+}

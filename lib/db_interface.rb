@@ -52,6 +52,21 @@ class Database
             'VALUES ($1, $2)', deck_name, user_id(username))
     end
 
+    def calculate_progress(deck_id)
+      result = query("SELECT count(1) FROM flashcards " \
+                      "JOIN decks_flashcards " \
+                        "ON flashcard_id = flashcards.id " \
+                      "WHERE deck_id = $1", deck_id).first
+      total_cards = result['count'].to_i
+      return 0 if total_cards.zero?
+      result = query("SELECT count(1) FROM flashcards " \
+                      "JOIN decks_flashcards " \
+                        "ON flashcard_id = flashcards.id " \
+                      "WHERE deck_id = $1 AND user_proficiency = 'good'", deck_id).first
+      marked_good = result['count'].to_i
+      marked_good.fdiv(total_cards).round(2) * 100
+    end
+
     private
 
     def user_id(username)
