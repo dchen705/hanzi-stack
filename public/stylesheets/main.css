@@ -183,6 +183,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   backface-visibility: hidden;
   border: 3px solid black;
   border-radius: 10px;
@@ -191,9 +192,16 @@ main {
   font-weight: bold
 }
 
+.cardface-top-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 2.5%;
+  padding-right: 2.5%;
+}
+
 .cardface-content {
-  margin-top: auto;
-  margin-bottom: auto;
+  margin: auto 0;
 }
 
 .cardface-content .hanzi {
@@ -271,7 +279,8 @@ main {
   margin: 0 auto;
 }
 
-.instructions {
+.instructions,
+.count-container {
   display: flex;
   justify-content: center;
   font-family: "Neucha", sans-serif;
@@ -290,6 +299,22 @@ main {
   position: relative;
   right: 200px;
   bottom: 50px;
+}
+
+.shuffle-btn {
+  color: #cdcccb;
+  font-size: 1.25rem;
+  background-color: transparent;
+  border: none;
+}
+
+.shuffle-btn:hover {
+  color: #41403e;
+  cursor: pointer;
+}
+
+.shuffle-btn.active {
+  color: #41403e;
 }
 
 .tabs {

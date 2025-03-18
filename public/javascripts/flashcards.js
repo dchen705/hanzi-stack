@@ -1,15 +1,4 @@
-// Array(3) [ {…}, {…}, {…} ]
-// ​
-// 0: Object { hanzi: "一", pinyin: "yī", meaning: "one; a, an; alone" }
-// ​
-// 1: Object { hanzi: "七", pinyin: "qī", meaning: "seven" }
-// ​
-// 2: Object { hanzi: "丁", pinyin: "dīng", meaning: "male adult; robust, vigorous; 4th heavenly stem" }
-// ​
-// length: 3
-// const flashcards = <%== @flashcards.to_json %>;
-let currentIndex = 0;
-
+// CONSTANTS
 const hanzi = document.querySelector('.hanzi');
 const pinyin = document.querySelector('.pinyin');
 const meaning = document.querySelector('.meaning');
@@ -17,45 +6,15 @@ const cardContainer = document.querySelector('.cardface-container');
 const quitLink = document.querySelector('.quit-link');
 const prevButton = document.querySelector('button.prev');
 const nextButton = document.querySelector('button.next');
+const shuffleButtons = document.querySelectorAll('.shuffle-btn');
 const tabContainers = document.querySelectorAll('.tabs');
 const tabs = document.querySelectorAll('.tabs input');
+const cardIndex = document.querySelector('span.card-index');
 
-function selectBothSidesTab(tabclass) {
-  document.querySelectorAll(tabclass).forEach(tab => {
-    tab.checked = true;
-  })
-}
+let currentIndex = 0;
 
-function updateCard() {
-  let currentCard = flashcards[currentIndex]
-  hanzi.textContent = currentCard.hanzi;
-  pinyin.textContent = currentCard.pinyin;
-  meaning.textContent = currentCard.meaning;
-  if (currentSavedProficiency() != null ) {
-    selectBothSidesTab(`.tab${currentSavedProficiency()}`);
-  }
-}
-
-function resetCardFace() {
-  cardContainer.style.transition = 'none';
-  cardContainer.classList.remove('flipped');
-  setTimeout(() => {
-    cardContainer.style.transition = 'transform .5s';
-  }, 500)
-}
-
-function disableButton(button) {
-  button.style.opacity = 0;
-  button.disabled = true;
-  button.style.cursor = 'default';
-};
-
-function enableButton(button) {
-  button.style.opacity = 1;
-  button.disabled = false;
-  button.style.cursor = 'pointer';
-}
-
+// FUNCTIONS
+// DOM Getters/Readers
 function firstCard() {
   return currentIndex === 0;
 }
@@ -72,6 +31,82 @@ function newSelectedProficiency() {
   return document.querySelector('.tabs input:checked').className.slice(-1);
 }
 
+// DOM Writes/Manipulation
+function updateCardIndex() {
+  cardIndex.textContent = currentIndex + 1;
+}
+
+function disableButton(button) {
+  button.style.opacity = 0;
+  button.disabled = true;
+  button.style.cursor = 'default';
+};
+
+function enableButton(button) {
+  button.style.opacity = 1;
+  button.disabled = false;
+  button.style.cursor = 'pointer';
+}
+
+function selectBothSidesTab(tabclass) {
+  document.querySelectorAll(tabclass).forEach(tab => {
+    tab.checked = true;
+  })
+}
+
+function resetCardFace() {
+  cardContainer.style.transition = 'none';
+  cardContainer.classList.remove('flipped');
+  setTimeout(() => {
+    cardContainer.style.transition = 'transform .5s';
+  }, 500)
+}
+
+function initializeFirstCard() {
+  disableButton(prevButton);
+  currentIndex = 0;
+  updateCard();
+  if (lastCard()) {
+    disableButton(nextButton);
+  } else {
+    enableButton(nextButton);
+  }
+}
+
+function swipeCardInView() {
+  setTimeout(() => {
+    cardContainer.style.transition = 'none';
+    cardContainer.classList.remove('swiped-left');
+    cardContainer.classList.remove('swiped-right');
+    cardContainer.style.transition = 'transform .25s';
+  }, 25);
+}
+
+function updateCard() {
+  let currentCard = flashcards[currentIndex]
+  hanzi.textContent = currentCard.hanzi;
+  pinyin.textContent = currentCard.pinyin;
+  meaning.textContent = currentCard.meaning;
+  if (currentSavedProficiency() != null ) {
+    selectBothSidesTab(`.tab${currentSavedProficiency()}`);
+  }
+  resetCardFace();
+  updateCardIndex();
+}
+
+function shuffleCards(cards) {
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  return cards;
+}
+
+function rearrangeToOriginalOrder() {
+  flashcards.sort((a, b) => a.originalIndex - b.originalIndex);
+}
+
+// Backend Writes/Updates
 function updateProficiency() {
   if (currentSavedProficiency() == null ) {
     return;
@@ -91,21 +126,85 @@ function updateProficiency() {
   }
 }
 
-function swipeCardInView() {
-  setTimeout(() => {
-    cardContainer.style.transition = 'none';
-    cardContainer.classList.remove('swiped-left');
-    cardContainer.classList.remove('swiped-right');
-    cardContainer.style.transition = 'transform .25s';
-  }, 25);
+// Event Handlers
+function handlePrevButtonClick() {
+  updateProficiency();
+  cardContainer.classList.add('swiped-left');
+  currentIndex -= 1;
+  updateCard();
+  swipeCardInView();
+  enableButton(nextButton);
+  if (firstCard()) {
+    disableButton(prevButton);
+  }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  disableButton(prevButton);
+function handleNextButtonClick() {
+  updateProficiency();
+  cardContainer.classList.add('swiped-right');
+  currentIndex += 1;
   updateCard();
+  swipeCardInView();
+  enableButton(prevButton);
   if (lastCard()) {
     disableButton(nextButton);
   };
+}
+
+function handleQuitLinkClick(event) {
+  event.preventDefault();
+  updateProficiency()
+  setTimeout(() => {
+    window.location.href = quitLink.href;
+  }, 50)
+}
+
+function handleShuffleButtonClick(event) {
+  const button = event.currentTarget;
+  event.stopPropagation();
+  updateProficiency();
+  shuffleButtons.forEach(button => {button.classList.toggle('active')})
+  if (button.classList.contains('active')) {
+    flashcards = shuffleCards(flashcards);
+  } else {
+    rearrangeToOriginalOrder();
+  }
+  initializeFirstCard();
+}
+
+function handleKeyDown(event) {
+  switch (event.key) {
+    case 'q':
+      quitLink.click();
+      break;
+    case 'w':
+      cardContainer.classList.toggle('flipped');
+      break;
+    case 'a':
+      prevButton.click();
+      break;
+    case 'd':
+      nextButton.click();
+      break;
+    case 's':
+      shuffleButtons[0].click();
+      break;
+    case '1':
+    case '2':
+    case '3':
+      selectBothSidesTab(`.tab${event.key}`);
+      break;
+  }
+}
+
+// EXECUTION FLOW
+document.addEventListener('DOMContentLoaded', function() {
+  initializeFirstCard();
+
+  // Add originalIndex to each flashcard to enable unshuffle
+  flashcards.forEach((flashcard, index) => {
+    flashcard.originalIndex = index;
+  });
 
   cardContainer.addEventListener('click', function() {
     this.classList.toggle('flipped');
@@ -114,8 +213,8 @@ document.addEventListener('DOMContentLoaded', function() {
   tabContainers.forEach(container => {
     container.addEventListener('click', function(event) {
       event.stopPropagation();
-    });
-  });
+    })
+  })
 
   tabs.forEach(tab => {
     tab.addEventListener('change', function() {
@@ -123,57 +222,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  prevButton.addEventListener('click', function() {
-    updateProficiency();
-    cardContainer.classList.add('swiped-left');
-    currentIndex -= 1;
-    resetCardFace();
-    updateCard();
-    swipeCardInView();
-    enableButton(nextButton);
-    if (firstCard()) { disableButton(prevButton); };
-  });
-
-  nextButton.addEventListener('click', function() {
-    updateProficiency();
-    cardContainer.classList.add('swiped-right');
-    currentIndex += 1;
-    resetCardFace();
-    updateCard();
-    swipeCardInView();
-    enableButton(prevButton);
-    if (lastCard()) { disableButton(nextButton); };
-  });
-
-  quitLink.addEventListener('click', function(event) {
-    event.preventDefault();
-
-    updateProficiency()
-    setTimeout(() => {
-      window.location.href = quitLink.href;
-    }, 50)
-  });
-
-  window.addEventListener('keydown', function(e) {
-    switch (e.key) {
-      case 'q':
-        quitLink.click();
-        break;
-      case 'w':
-        cardContainer.classList.toggle('flipped');
-        break;
-      case 'a':
-        prevButton.click();
-        break;
-      case 'd':
-        nextButton.click();
-        break;
-      case '1':
-      case '2':
-      case '3':
-        selectBothSidesTab(`.tab${e.key}`);
-        break;
-    }
-  });
+  shuffleButtons.forEach(button => {
+    button.addEventListener('click', handleShuffleButtonClick);
+  })
+  prevButton.addEventListener('click', handlePrevButtonClick);
+  nextButton.addEventListener('click', handleNextButtonClick);
+  quitLink.addEventListener('click', handleQuitLinkClick);
+  window.addEventListener('keydown', handleKeyDown);
 });
-

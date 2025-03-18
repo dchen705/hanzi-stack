@@ -13,6 +13,11 @@
   </div>
   <div class="cardface-container">
     <div class="cardface front">
+      <div class="cardface-top-row">
+        <button type="button" class="shuffle-btn">
+          <i class="bi bi-shuffle"></i> [S]
+        </button>
+      </div>
       <div class="cardface-content">
       <p class="hanzi"></p>
       </div>
@@ -30,6 +35,11 @@
       <% end %>
     </div>
     <div class="cardface back">
+      <div class="cardface-top-row">
+        <button type="button" class="shuffle-btn">
+          <i class="bi bi-shuffle"></i> [S]
+        </button>
+      </div>
       <div class="cardface-content">
         <p class="pinyin"></p>
         <p class="meaning"></p>
@@ -54,10 +64,13 @@
       <p>1, 2, or 3 to change proficiency.</p>
     </div>
   <% end %>
+  <div class="count-container">
+    <span class="card-index">1</span><span>/<%= @flashcards.size %></span>
+  </div>
 </div>
 </div>
 
 <script>
-  const flashcards = <%== @flashcards.to_json %>;
+  let flashcards = <%== @flashcards.to_json %>;
 </script>
 <script src="/javascripts/flashcards.js"></script>
