@@ -16,13 +16,8 @@ class Database
     private
 
     def create_database
-      PG.connect(dbname: 'postgres') do |db_admin|
-        db_admin.exec("CREATE DATABASE \"#{NAME}\";")
-      end
-      PG.connect(dbname: NAME) do |db|
-        schema_sql = File.read(File.expand_path('../data/schema.sql', __dir__))
-        db.exec(schema_sql)
-      end
+      system("createdb \"#{NAME}\";")
+      system("psql -X #{NAME} < #{File.expand_path('../data/dump.sql', __dir__)}")
     end
   end
 

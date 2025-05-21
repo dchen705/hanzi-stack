@@ -211,7 +211,7 @@ class RoutesTest < Minitest::Test
     # skip
     post '/deck/edit/add', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
     get '/deck/edit', { 'deck-id' => '1' }, admin_session
-    assert_includes last_response.body, '一'
+    assert_includes last_response.body, '的'
   end
 
   def test_remove_card
@@ -219,7 +219,7 @@ class RoutesTest < Minitest::Test
     post '/deck/edit/add', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
     post '/deck/edit/remove', { 'deck-id' => '1', 'character-id' => '1' }, admin_session
     get '/deck/edit', { 'deck-id' => '1' }, admin_session
-    refute_includes last_response.body, '一'
+    refute_includes last_response.body, '的'
   end
 
   def test_search_pagination_buttons_exists
@@ -244,10 +244,10 @@ class RoutesTest < Minitest::Test
   def test_search_char_additional_pages
     # skip
     get '/search/characters', { 'page' => '2' }
-    assert_includes last_response.body, 'zhuān'
+    assert_includes last_response.body, 'zhè'
     get '/search/characters', { 'page' => '3' }
-    refute_includes last_response.body, 'zhuān'
-    assert_includes last_response.body, 'diū'
+    refute_includes last_response.body, 'zhè'
+    assert_includes last_response.body, 'dào'
   end
 
   # def test_characters_view_diff_user
