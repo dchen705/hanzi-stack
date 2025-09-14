@@ -7,6 +7,7 @@ class Database
 
   class << self
     def test_connect
+      return if Sinatra::Base.production?
       PG.connect(dbname: NAME) { |db| db }
     rescue PG::ConnectionBad
       create_database

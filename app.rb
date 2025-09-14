@@ -15,7 +15,7 @@ end
 configure(:development, :test) do
   require 'sinatra/reloader'
   also_reload 'lib/*.rb'
-  Database.test_connect
+  # Database.test_connect
 end
 
 before do
