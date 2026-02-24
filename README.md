@@ -34,6 +34,9 @@
 - Bootstrap
 
 ### Possible Future Features
-- Add filter by frequency rank
+- Add filter by frequency rank √
 - Populate database with "multi-character" words
 - Expand testing suite to include forms (Capybara)
+- Security: url encoding
+- Add remove flashcard button to stack and deck edit pages
+- Fix: bug in flashcard mode, can't use arrowkeys and wasd keys - stuck in navigating scroll

@@ -191,6 +191,20 @@ input.filter {
   aspect-ratio: 3/2.5;
 }
 
+.flashcard {
+  position: relative;
+}
+
+.flashcard-remove-button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  z-index: 1;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
 .flashcard-content {
   font-size: .8rem;
   max-height: 100%;
