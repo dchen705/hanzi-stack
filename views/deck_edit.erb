@@ -42,6 +42,13 @@
 <div class="container-flashcards">
   <% @flashcards.each do |card| %>
     <div class="flashcard card bg-secondary">
+      <button
+        type="button"
+        class="flashcard-remove-button btn btn-sm btn-light"
+        data-character-id="<%= card['character_id'] %>"
+        data-deck-id="<%= @deck_id %>">
+        &times;
+      </button>
       <div class="flashcard-content">
         <h2><%= card["hanzi"] %></h2>
         <h4><%= card["pinyin"] %></h4>

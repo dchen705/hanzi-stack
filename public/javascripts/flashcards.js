@@ -173,7 +173,10 @@ function handleShuffleButtonClick(event) {
 }
 
 function handleKeyDown(event) {
-  switch (event.key) {
+  const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+  let handled = true;
+
+  switch (key) {
     case 'q':
       quitLink.click();
       break;
@@ -181,9 +184,13 @@ function handleKeyDown(event) {
       cardContainer.classList.toggle('flipped');
       break;
     case 'a':
+    case 'ArrowLeft':
+    case 'ArrowUp':
       prevButton.click();
       break;
     case 'd':
+    case 'ArrowRight':
+    case 'ArrowDown':
       nextButton.click();
       break;
     case 's':
@@ -192,8 +199,15 @@ function handleKeyDown(event) {
     case '1':
     case '2':
     case '3':
-      selectBothSidesTab(`.tab${event.key}`);
+      selectBothSidesTab(`.tab${key}`);
       break;
+    default:
+      handled = false;
+      break;
+  }
+
+  if (handled) {
+    event.preventDefault();
   }
 }
 

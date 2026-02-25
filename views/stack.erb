@@ -4,6 +4,12 @@
 <div class="container-flashcards">
   <% @stack.each do |card| %>
     <div class="flashcard card bg-secondary">
+      <button
+        type="button"
+        class="flashcard-remove-button btn btn-sm btn-light"
+        data-card-id="<%= card[0] %>">
+        &times;
+      </button>
       <div class="flashcard-content">
         <h2><%= card[1]['hanzi'] %></h2>
         <h4><%= card[1]['pinyin'] %></h4>
@@ -16,3 +22,5 @@
   <p class=".text-body-secondary">Currently no cards in your stack.</p>
   <a class="tab" href="/search/characters">Search Characters</a>
 <% end %>
+
+<script src="/javascripts/stack.js"></script>

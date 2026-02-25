@@ -27,9 +27,9 @@ class Database
     # Characters
     def list_characters(page_number, filters)
       offset = (page_number - 1) * SEARCH_PAGE_LIMIT
-      sql = search_query(offset)
       sql_filters = normalize_filters(filters)
-      result = query(sql, *sql_filters.values)
+      sql, params = search_query(offset, sql_filters)
+      result = query(sql, *params)
       parse_result(result)
     end
 
@@ -78,28 +78,64 @@ class Database
       return false if offset.negative?
 
       sql_filters = normalize_filters(filters)
-      sql = search_query(offset)
-      query(sql, *sql_filters.values).ntuples >= 1
+      sql, params = search_query(offset, sql_filters)
+      query(sql, *params).ntuples >= 1
     end
 
-    def search_query(offset)
-      'SELECT * FROM characters ' \
-      'WHERE hanzi LIKE $1 ' \
-      'AND pinyin LIKE $2 ' \
-      'AND meaning LIKE $3 ' \
-      'AND radical LIKE $4 ' \
-      'AND hsk2 LIKE $5 ' \
-      'AND hsk3 LIKE $6 ' \
-      "OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT};"
+    def search_query(offset, sql_filters)
+      param_num = 1
+      conditions = []
+      params = []
+
+      # Text filters (always included, use LIKE with %)
+      text_filters = %w[hanzi pinyin meaning radical hsk2 hsk3]
+      text_filters.each do |key|
+        value = sql_filters[key] || '%'
+        conditions << "#{key} LIKE $#{param_num}"
+        params << value
+        param_num += 1
+      end
+
+      # Frequency range filters (optional)
+      if sql_filters['frequency_min']
+        conditions << "frequency >= $#{param_num}"
+        params << sql_filters['frequency_min']
+        param_num += 1
+      end
+
+      if sql_filters['frequency_max']
+        conditions << "frequency <= $#{param_num}"
+        params << sql_filters['frequency_max']
+        param_num += 1
+      end
+
+      sql = 'SELECT * FROM characters ' \
+            "WHERE #{conditions.join(' AND ')} " \
+            "OFFSET #{offset} LIMIT #{SEARCH_PAGE_LIMIT};"
+      [sql, params]
     end
 
     def normalize_filters(filters)
-      sql_filters = filters.dup
-      filters.each do |key, value|
+      sql_filters = {}
+
+      # Process text filters
+      text_filters = %w[hanzi pinyin meaning radical hsk2 hsk3]
+      text_filters.each do |key|
+        value = filters[key] || ''
         value = value.empty? ? '%' : value.strip
         value = "%#{value}%" if %w[meaning radical].include?(key)
         sql_filters[key] = value
       end
+
+      # Process frequency range filters
+      if filters['frequency_min'] && !filters['frequency_min'].empty?
+        sql_filters['frequency_min'] = filters['frequency_min'].to_i
+      end
+
+      if filters['frequency_max'] && !filters['frequency_max'].empty?
+        sql_filters['frequency_max'] = filters['frequency_max'].to_i
+      end
+
       sql_filters
     end
 

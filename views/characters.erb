@@ -38,7 +38,10 @@
       <td><input class="filter" name="hanzi" value="<%= @filters['hanzi'] %>"></td>
       <td><input class="filter" name="pinyin" value="<%= @filters['pinyin'] %>"></td>
       <td><input class="filter" name="meaning" value="<%= @filters['meaning'] %>"></td>
-      <td></td>
+      <td>
+        <input type="number" class="filter" name="frequency_min" placeholder="Min" value="<%= @filters['frequency_min'] %>">
+        <input type="number" class="filter" name="frequency_max" placeholder="Max" value="<%= @filters['frequency_max'] %>">
+      </td>
       <td><input class="filter" name="radical" value="<%= @filters['radical'] %>"></td>
       <td></td>
       <td><input class="filter" name="hsk2" value="<%= @filters['hsk2'] %>"></td>
